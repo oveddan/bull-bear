@@ -2,15 +2,15 @@
 pragma solidity ^0.8.13;
 
 contract Counter {
-    uint256 public number = 0;
-    
-    event Transfer(address indexed from, address indexed to, uint256 value);
+  uint256 public number = 0;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
-    }
+  event Transfer(address indexed from, address indexed to, uint256 value);
 
-    function increment() public {
-        number++;
-    }
+  function setNumber(uint256 newNumber) public {
+    number = newNumber;
+  }
+
+  function increment() public {
+    number++;
+  }
 }
