@@ -9,7 +9,9 @@ import { client } from './wagmi';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <WagmiConfig client={client}>
+      {/* <RainbowKitProvider chains={chains}> */}
       <App />
+      {/* </RainbowKitProvider> */}
     </WagmiConfig>
   </React.StrictMode>
 );

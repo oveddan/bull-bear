@@ -1,17 +1,27 @@
 import { configureChains, createClient } from 'wagmi';
-import { foundry, goerli, mainnet } from 'wagmi/chains';
+import { foundry, goerli, mainnet, sepolia } from 'wagmi/chains';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { publicProvider } from 'wagmi/providers/public';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
-const { chains, provider, webSocketProvider } = configureChains(
+const getAllowedChains = () =>
+  import.meta.env?.MODE === 'development'
+    ? [foundry, sepolia, goerli, mainnet]
+    : [sepolia, goerli, mainnet];
+
+export const { chains, provider, webSocketProvider } = configureChains(
+  getAllowedChains(),
   [
-    mainnet,
-    ...(import.meta.env?.MODE === 'development' ? [goerli, foundry] : [])
-  ],
-  [publicProvider()]
+    publicProvider(),
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: `http://127.0.0.1:8545`
+      })
+    })
+  ]
 );
 
 export const client = createClient({

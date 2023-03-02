@@ -1,4 +1,9 @@
-import { OrbitControls, Stage, useGLTF } from '@react-three/drei';
+import {
+  OrbitControls,
+  Stage,
+  useContextBridge,
+  useGLTF
+} from '@react-three/drei';
 import { Canvas, ObjectMap } from '@react-three/fiber';
 import { useState } from 'react';
 import { Object3D } from 'three';
@@ -8,7 +13,7 @@ import { GLTF } from 'three-stdlib';
 import {
   useCoreRegistry,
   useDependency,
-  useGraphRunner,
+  // useGraphRunner,
   useMergeDependencies
 } from '@oveddan-behave-graph/flow';
 import { useGraphJson } from '../scene/buildGraphJson';
@@ -16,7 +21,8 @@ import { useSceneRegistry } from '../hooks/useSceneRegistry';
 import { createSceneDependency } from '@oveddan-behave-graph/scene';
 import ToggleAnimations from '../scene/ToggleAnimations';
 import { RegisterOnClickListeners } from '../scene/RegisterOnClickListeners';
-
+import { ConnectButton3d } from './ConnectButton3d';
+import { Context as WagmiContext } from 'wagmi';
 export const Scene = () => {
   const gltf = useGLTF(catModel) as GLTF & ObjectMap;
 
@@ -62,18 +68,21 @@ export const Scene = () => {
   // });
 
   const [mainRef, setMainRef] = useState<Object3D | null>(null);
+  const ContextBridge = useContextBridge(WagmiContext);
   return (
     <Canvas>
-      <OrbitControls makeDefault target={mainRef?.position} />
-      <Stage shadows intensity={1} environment="city" preset="rembrandt">
-        <primitive object={gltf.scene} ref={setMainRef}>
-          <RegisterOnClickListeners
-            gltf={gltf}
-            onClickListeners={onClickListeners}
-          />
-        </primitive>
-      </Stage>
-      <ToggleAnimations gltf={gltf} animationsState={animations} />
+      <ContextBridge>
+        <OrbitControls makeDefault target={mainRef?.position} />
+        <Stage shadows intensity={1} environment="city" preset="rembrandt">
+          <primitive object={gltf.scene} ref={setMainRef}>
+            <RegisterOnClickListeners
+              gltf={gltf}
+              onClickListeners={onClickListeners}
+            />
+          </primitive>
+        </Stage>
+        <ToggleAnimations gltf={gltf} animationsState={animations} />
+      </ContextBridge>
     </Canvas>
   );
 };
