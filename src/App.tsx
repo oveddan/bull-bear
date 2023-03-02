@@ -1,7 +1,8 @@
 // import { Canvas } from '@react-three/fiber';
-import { Connect } from './components';
-import { Scene } from './components/Scene';
+import { NonEditableScene } from './components/NonEditableScene';
 import './app.css';
+
+import catModel from './assets/chewing.glb';
 
 export function App() {
   // const { isConnected } = useAccount();
@@ -10,9 +11,9 @@ export function App() {
     <>
       {/* <h1>wagmi + Vite</h1> */}
 
-      <Connect />
+      {/* <Connect /> */}
 
-      <Scene />
+      <NonEditableScene modelUrl={catModel} />
     </>
   );
 }

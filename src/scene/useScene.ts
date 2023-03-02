@@ -1,11 +1,8 @@
-import {
-  buildScene,
-  IScene,
-  OnClickListeners
-} from '@oveddan-behave-graph/scene';
+import { IScene, OnClickListeners } from '@oveddan-behave-graph/scene';
 import { ObjectMap } from '@react-three/fiber';
 import { useCallback, useEffect, useState } from 'react';
 import { GLTF } from 'three-stdlib';
+import { buildScene } from './buildScene';
 
 export type AnimationsState = { [key: string]: boolean };
 

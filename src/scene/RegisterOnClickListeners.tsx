@@ -1,15 +1,15 @@
-import { OnClickListener, OnClickListeners } from '@oveddan-behave-graph/scene'
+import { OnClickListener, OnClickListeners } from '@oveddan-behave-graph/scene';
 import { GLTF } from 'three-stdlib';
 import { ObjectMap } from '@react-three/fiber';
 import { useCallback, useEffect, useState } from 'react';
-import { Mesh } from 'three';
+import { Mesh, Object3D } from 'three';
 import { useCursor } from '@react-three/drei';
 
 const RegisterOnClickListenersOnElements = ({
   jsonPath,
   listeners,
   gltf,
-  setHovered,
+  setHovered
 }: {
   jsonPath: string;
   listeners: OnClickListener;
@@ -20,11 +20,35 @@ const RegisterOnClickListenersOnElements = ({
 
   useEffect(() => {
     if (listeners.path.resource === 'nodes') {
-      const node = gltf.nodes[listeners.elementName].clone() as Mesh;
+      const nodeSource = gltf.nodes[listeners.elementName];
+      if (!nodeSource) {
+        console.error('no node at path ' + listeners.elementName);
+        return;
+      }
+      const node = nodeSource.clone() as Mesh;
 
       setNode(node);
       return;
+    } else if (listeners.path.resource === 'meshes') {
+      let nodeSource: Mesh | undefined = undefined;
+      gltf.scene.traverse((x) => {
+        console.log(x.name);
+        if (x.name === listeners.elementName.replace('.', '')) {
+          nodeSource = x as Mesh;
+        }
+      });
+      if (!nodeSource) {
+        console.error('no mesh at path ' + listeners.elementName);
+        return;
+      }
+      const node = (nodeSource as Mesh).clone() as Mesh;
+
+      setNode(node);
+      return;
+    } else {
+      console.error('unknown path resource of ' + listeners.path.resource);
     }
+
     setNode(undefined);
   }, [listeners.path, gltf]);
 
@@ -44,7 +68,13 @@ const RegisterOnClickListenersOnElements = ({
   );
 };
 
-export const RegisterOnClickListeners = ({ onClickListeners, gltf }: {onClickListeners: OnClickListeners, gltf?: GLTF & ObjectMap;}) => {
+export const RegisterOnClickListeners = ({
+  onClickListeners,
+  gltf
+}: {
+  onClickListeners: OnClickListeners;
+  gltf?: GLTF & ObjectMap;
+}) => {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered, 'pointer', 'auto');
 
