@@ -169,7 +169,6 @@ function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
     }
     case 'scale': {
       const v = value as Vec3;
-      console.log(v.x);
       objectRef.scale.set(v.x, v.y, v.z);
       break;
     }

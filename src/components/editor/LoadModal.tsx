@@ -1,27 +1,29 @@
 import { GraphJSON } from '@oveddan-behave-graph/core';
-import { FC, useState, useEffect, useCallback, useMemo, CSSProperties } from 'react';
+import {
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  CSSProperties
+} from 'react';
 import { useReactFlow } from 'reactflow';
 import { Modal } from './Modal';
 import { useDropzone } from 'react-dropzone';
 
-import { fetchModelFile } from '../hooks/useSaveAndLoad';
-import ModelPreview from '../scene/ModelPreview';
-import { exampleBehaveGraphFileUrl, fetchBehaviorGraphJson } from '../hooks/useSaveAndLoad';
-import { exampleModelFileUrl } from '../hooks/useSetAndLoadModelFile';
-
 const modelFiles = {
   pressButtonToStartElevator: 'PressButtonToStartElevator.gltf',
-  suzanne: 'SpinningSuzanne.gltf',
+  suzanne: 'SpinningSuzanne.gltf'
 };
 
 const graphFiles = {
   clickButtonToAnimate: 'ClickButtonToAnimate.json',
-  spinningSuzanne: 'SpinningSuzanne.json',
+  spinningSuzanne: 'SpinningSuzanne.json'
 };
 
 export const examplePairs: [string, string][] = [
   [modelFiles.pressButtonToStartElevator, graphFiles.clickButtonToAnimate],
-  [modelFiles.suzanne, graphFiles.spinningSuzanne],
+  [modelFiles.suzanne, graphFiles.spinningSuzanne]
 ];
 
 const defaultSelectedIndex = '0';
@@ -34,7 +36,7 @@ const buildExampleOptions = () =>
         index: i,
         text: `Model: ${modelFile} / Behavior: ${behaviorFile}`,
         modelFile,
-        behaviorFile,
+        behaviorFile
       };
     } else {
       const [behaviorFile] = pair;
@@ -42,7 +44,7 @@ const buildExampleOptions = () =>
         index: i,
         text: `Behavior: ${behaviorFile}`,
         behaviorFile,
-        modelFile: undefined,
+        modelFile: undefined
       };
     }
   });
@@ -67,25 +69,25 @@ const baseStyle = {
   backgroundColor: '#fafafa',
   color: '#bdbdbd',
   outline: 'none',
-  transition: 'border .24s ease-in-out',
+  transition: 'border .24s ease-in-out'
 };
 
 const focusedStyle = {
-  borderColor: '#2196f3',
+  borderColor: '#2196f3'
 };
 
 const acceptStyle = {
-  borderColor: '#00e676',
+  borderColor: '#00e676'
 };
 
 const rejectStyle = {
-  borderColor: '#ff1744',
+  borderColor: '#ff1744'
 };
 
 const useDropZoneStyle = ({
   isFocused,
   isDragAccept,
-  isDragReject,
+  isDragReject
 }: {
   isFocused: boolean;
   isDragAccept: boolean;
@@ -96,7 +98,7 @@ const useDropZoneStyle = ({
       ...baseStyle,
       ...(isFocused ? focusedStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {}),
+      ...(isDragReject ? rejectStyle : {})
     }),
     [isFocused, isDragAccept, isDragReject]
   ) as CSSProperties;
@@ -120,13 +122,18 @@ export const fetchExample = async (exampleIndex: number) => {
 
   return {
     behaviorGraph: fetched,
-    modelFile: downloadedModelFile,
+    modelFile: downloadedModelFile
   };
 };
 
 const emptyGraphJson = (): GraphJSON => ({});
 
-export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehaviorGraph, setModelFile }) => {
+export const LoadModal: FC<LoadModalProps> = ({
+  open = false,
+  onClose,
+  setBehaviorGraph,
+  setModelFile
+}) => {
   const [behaviorGraphString, setBehaviorGraphString] = useState<string>();
 
   const [uploadedModelFile, setUploadedModelFile] = useState<File>();
@@ -142,7 +149,9 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
   }, [open]);
 
   const handleLoad = useCallback(() => {
-    const graph = behaviorGraphString ? (JSON.parse(behaviorGraphString) as GraphJSON) : emptyGraphJson();
+    const graph = behaviorGraphString
+      ? (JSON.parse(behaviorGraphString) as GraphJSON)
+      : emptyGraphJson();
 
     setBehaviorGraph(graph);
 
@@ -154,24 +163,37 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
     }, 100);
 
     handleClose();
-  }, [setModelFile, setBehaviorGraph, behaviorGraphString, uploadedModelFile, instance]);
+  }, [
+    setModelFile,
+    setBehaviorGraph,
+    behaviorGraphString,
+    uploadedModelFile,
+    instance
+  ]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
 
     setUploadedModelFile(acceptedFiles[0]);
   }, []);
-  const { getRootProps, getInputProps, isDragActive, isFocused, isDragAccept, isDragReject } = useDropzone({
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isFocused,
+    isDragAccept,
+    isDragReject
+  } = useDropzone({
     onDrop,
     accept: {
-      'model/glb': ['.glb', '.gltf'],
-    },
+      'model/glb': ['.glb', '.gltf']
+    }
   });
 
   const style = useDropZoneStyle({
     isDragAccept,
     isDragReject,
-    isFocused,
+    isFocused
   });
 
   const handleClose = useCallback(() => {
@@ -187,7 +209,9 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
   useEffect(() => {
     if (selectedExample !== '') {
       (async () => {
-        const { behaviorGraph, modelFile } = await fetchExample(+selectedExample);
+        const { behaviorGraph, modelFile } = await fetchExample(
+          +selectedExample
+        );
 
         setBehaviorGraphString(JSON.stringify(behaviorGraph, null, 2));
 
@@ -210,14 +234,21 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
       title="Load Behave Graph and Optionally Model"
       actions={[
         { label: 'Cancel', onClick: handleClose },
-        { label: 'Load', onClick: handleLoad, disabled: !uploadedModelFile && !behaviorGraphString },
+        {
+          label: 'Load',
+          onClick: handleLoad,
+          disabled: !uploadedModelFile && !behaviorGraphString
+        }
       ]}
       open={open}
       onClose={onClose}
     >
       <div className="grid grid-rows-2 w-full gap-2">
         <div>
-          <label htmlFor="behavee-graph" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="behavee-graph"
+            className="block text-sm font-medium text-gray-700"
+          >
             behave graph json
           </label>
           <div className="mt-1">
@@ -235,7 +266,12 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
         {!uploadedModelFile && (
           <div {...getRootProps({ style })}>
             <input {...getInputProps()} />
-            {<p>Drag 'n' drop a gltf or glb model file here, or click to select a file</p>}
+            {
+              <p>
+                Drag 'n' drop a gltf or glb model file here, or click to select
+                a file
+              </p>
+            }
           </div>
         )}
         {uploadedModelFile && (

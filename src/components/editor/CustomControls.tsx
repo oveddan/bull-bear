@@ -60,16 +60,16 @@ export const CustomControls = ({
         {additionalControls}
       </Controls>
       <>
+        <SaveModal
+          open={saveModalOpen}
+          onClose={() => setSaveModalOpen(false)}
+          graphJson={graphJson}
+        />
         <LoadModal
           open={loadModalOpen}
           onClose={() => setLoadModalOpen(false)}
           setBehaviorGraph={setBehaviorGraph}
           setModelFile={setModelFile}
-        />
-        <SaveModal
-          open={saveModalOpen}
-          onClose={() => setSaveModalOpen(false)}
-          graphJson={graphJson}
         />
         <HelpModal
           open={helpModalOpen}

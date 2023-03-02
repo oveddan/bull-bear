@@ -1,5 +1,5 @@
 // import { Canvas } from '@react-three/fiber';
-import './app.css';
+import './editor.css';
 import { FlowAndScene } from './components/editor/FlowAndScene';
 
 import catModel from './assets/chewing.glb';

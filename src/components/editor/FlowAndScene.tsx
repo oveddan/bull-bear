@@ -1,8 +1,8 @@
 import { Suspense, useState } from 'react';
 import './styles/resizer.css';
 import { CustomControls } from './CustomControls';
-import SplitEditor from '../SplitEditor';
-import { createSceneDependency, ObjectMap } from '@oveddan-behave-graph/scene';
+import SplitEditor from './SplitEditor';
+import { createSceneDependency } from '@oveddan-behave-graph/scene';
 
 import {
   useBehaveGraphFlow,
@@ -13,13 +13,10 @@ import {
   useCustomNodeTypes,
   useMergeDependencies,
   useDependency,
-  useCoreRegistry,
-  fetchBehaviorGraphJson
+  useCoreRegistry
 } from '@oveddan-behave-graph/flow';
-import { suspend } from 'suspend-react';
 import ReactFlow, { Background, BackgroundVariant } from 'reactflow';
 import { useEffect } from 'react';
-import { GLTF } from 'three-stdlib';
 import {
   Environment,
   Lightformer,
@@ -29,10 +26,11 @@ import {
 } from '@react-three/drei';
 import { useSceneRegistry } from '../../hooks/useSceneRegistry';
 import { useScene } from '../../scene/useScene';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, ObjectMap } from '@react-three/fiber';
 import { Object3D } from 'three';
 import { SceneInner } from '../SceneInner';
 import { GraphJSON } from '@oveddan-behave-graph/core';
+import { GLTF } from 'three-stdlib';
 
 type FlowAndSceneProps = { modelUrl: string; initialGraphJSON: GraphJSON };
 
@@ -68,11 +66,17 @@ export function FlowAndSceneInner({
     values: valuesDefinitions
   });
 
-  const { nodes, edges, onNodesChange, onEdgesChange, graphJson } =
-    useBehaveGraphFlow({
-      initialGraphJson: initialGraphJSON,
-      specJson
-    });
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    graphJson,
+    setGraphJson
+  } = useBehaveGraphFlow({
+    initialGraphJson: initialGraphJSON,
+    specJson
+  });
 
   const { togglePlay, playing } = useGraphRunner({
     graphJson,
@@ -126,7 +130,15 @@ export function FlowAndSceneInner({
       onPaneClick={handlePaneClick}
       onPaneContextMenu={handlePaneContextMenu}
     >
-      {specJson && <CustomControls toggleRun={togglePlay} running={playing} />}
+      {/* {specJson && (
+        <CustomControls
+          toggleRun={togglePlay}
+          graphJson={graphJson}
+          running={playing}
+          setBehaviorGraph={setGraphJson}
+          setModelFile={setModelFile}
+        />
+      )} */}
       <Background
         variant={BackgroundVariant.Lines}
         color="#2a2b2d"

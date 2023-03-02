@@ -7,17 +7,13 @@ import {
   NodeJSON,
   NodeParameterJSON,
   NodeParametersJSON,
-  NodeParameterValueJSON,
   ValueJSON,
   FlowsJSON
 } from '@oveddan-behave-graph/core';
 import { IScene } from '@oveddan-behave-graph/scene';
 import { useMemo } from 'react';
 
-import {
-  OnSceneNodeClick,
-  SetSceneProperty
-} from '@oveddan-behave-graph/scene';
+import { OnSceneNodeClick } from '@oveddan-behave-graph/scene';
 
 const AutoIdIncrementer = () => {
   let value = 0;
@@ -31,8 +27,6 @@ const AutoIdIncrementer = () => {
     next
   };
 };
-
-type InputValueLink = {};
 
 type NodeValue =
   | string
@@ -53,8 +47,8 @@ type ConfiguredNode = {
   };
   inputFlows?: {
     [key: string]: {
-      nodeId: number;
-      socketId: string;
+      fromNodeId: number;
+      fromSocketId: string;
     };
   };
 };
@@ -88,17 +82,30 @@ const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
       })
     );
 
-    const edgesToNode = nodes.flatMap((node) =>
-      Object.entries(node.inputFlows || {}).filter(
-        ([, flow]) => flow.nodeId === node.id
-      )
+    const edgesFromNode = nodes.flatMap((otherNode) =>
+      Object.entries(otherNode.inputFlows || {})
+        .filter(([, flow]) => {
+          return flow.fromNodeId === node.id;
+        })
+        .map(([socketId, flow]) => ({
+          toSocketId: socketId,
+          toNodeId: otherNode.id,
+          fromSocketId: flow.fromSocketId
+        }))
     );
 
-    const flowsJson: FlowsJSON = Object.fromEntries(
-      edgesToNode.map(([id, flow]) => {
-        return [id, { nodeId: flow.nodeId.toString(), socket: flow.socketId }];
-      })
-    );
+    let flowsJson: FlowsJSON | undefined;
+
+    if (edgesFromNode.length > 0) {
+      flowsJson = {};
+
+      edgesFromNode.forEach((edge) => {
+        (flowsJson as FlowsJSON)[edge.fromSocketId] = {
+          nodeId: edge.toNodeId.toString(),
+          socket: edge.toSocketId
+        };
+      });
+    }
 
     return {
       id: node.id.toString(),
@@ -117,11 +124,6 @@ const buildGraph = (
   scene: IScene,
   nodeDefinitions: Record<string, NodeDefinition>
 ) => {
-  console.log({
-    props: scene?.getProperties(),
-    raycastable: scene?.getRaycastableProperties()
-  });
-
   const autoCounter = AutoIdIncrementer();
 
   const sceneSetBoolean = nodeDefinitions['scene/set/boolean'];
@@ -139,8 +141,8 @@ const buildGraph = (
     definition: Counter,
     inputFlows: {
       flow: {
-        nodeId: sceneNodeClickConfig.id,
-        socketId: 'flow'
+        fromNodeId: sceneNodeClickConfig.id,
+        fromSocketId: 'flow'
       }
     }
   };
@@ -176,7 +178,19 @@ const buildGraph = (
     id: autoCounter.next(),
     definition: sceneSetBoolean!,
     inputValues: {
-      jsonPath: 'animations/0/playing'
+      jsonPath: 'animations/0/playing',
+      value: {
+        link: {
+          nodeId: toBoolean.id,
+          socketId: 'result'
+        }
+      }
+    },
+    inputFlows: {
+      flow: {
+        fromNodeId: counter.id,
+        fromSocketId: 'flow'
+      }
     }
   };
 
@@ -187,6 +201,8 @@ const buildGraph = (
     toBoolean,
     startAnimation
   ]);
+
+  console.log(graphJson);
 
   return graphJson;
 };

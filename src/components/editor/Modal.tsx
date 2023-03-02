@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from 'react';
-import { useOnPressKey } from '../hooks/useOnPressKey';
-import { Fragment, useRef, useState } from 'react';
+import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
+import { useOnPressKey } from '@oveddan-behave-graph/flow';
 
 export type ModalAction = {
   label: string;
@@ -25,8 +25,7 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
   title,
   subtitle,
   children,
-  actions,
-  width = '96',
+  actions
 }) => {
   useOnPressKey('Escape', onClose);
 
@@ -34,7 +33,12 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" initialFocus={cancelButtonRef} onClose={onClose}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        initialFocus={cancelButtonRef}
+        onClose={onClose}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -64,7 +68,10 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
                     <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
                   </div> */}
                   <div className="mt-3 text-center sm:mt-5">
-                    <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
                       {title}
                     </Dialog.Title>
 
@@ -76,7 +83,9 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
                   </div>
                 </div>
                 <div className="text-sm mt-2">{children}</div>
-                <div className={`mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-${actions.length} sm:gap-3`}>
+                <div
+                  className={`mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-${actions.length} sm:gap-3`}
+                >
                   {actions.map((action, ix) => (
                     <button
                       key={ix}
@@ -85,7 +94,7 @@ export const Modal: FC<PropsWithChildren<ModalProps>> = ({
                         'inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm':
                           ix === actions.length - 1,
                         'mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:text-sm':
-                          ix !== actions.length - 1,
+                          ix !== actions.length - 1
                       })}
                       onClick={action.onClick}
                       disabled={action.disabled}

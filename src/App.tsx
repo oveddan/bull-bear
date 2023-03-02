@@ -3,6 +3,7 @@ import { NonEditableScene } from './components/NonEditableScene';
 import './app.css';
 
 import catModel from './assets/chewing.glb';
+import { Connect } from './components/Connect';
 
 export function App() {
   // const { isConnected } = useAccount();
@@ -11,7 +12,7 @@ export function App() {
     <>
       {/* <h1>wagmi + Vite</h1> */}
 
-      {/* <Connect /> */}
+      <Connect />
 
       <NonEditableScene modelUrl={catModel} />
     </>

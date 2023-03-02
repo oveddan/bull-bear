@@ -32,7 +32,6 @@ const RegisterOnClickListenersOnElements = ({
     } else if (listeners.path.resource === 'meshes') {
       let nodeSource: Mesh | undefined = undefined;
       gltf.scene.traverse((x) => {
-        console.log(x.name);
         if (x.name === listeners.elementName.replace('.', '')) {
           nodeSource = x as Mesh;
         }
