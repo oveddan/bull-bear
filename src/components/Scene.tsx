@@ -73,7 +73,7 @@ export const Scene = () => {
     <Canvas>
       <ContextBridge>
         <OrbitControls makeDefault target={mainRef?.position} />
-        <Stage shadows intensity={1} environment="city" preset="rembrandt">
+        <Stage intensity={0}>
           <primitive object={gltf.scene} ref={setMainRef}>
             <RegisterOnClickListeners
               gltf={gltf}
