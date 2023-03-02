@@ -1,20 +1,18 @@
-import { configureChains, createClient } from 'wagmi'
-import { foundry, goerli, mainnet } from 'wagmi/chains'
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-import { publicProvider } from 'wagmi/providers/public'
+import { configureChains, createClient } from 'wagmi';
+import { foundry, goerli, mainnet } from 'wagmi/chains';
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
     mainnet,
-    ...(import.meta.env?.MODE === 'development' ? [goerli, foundry] : []),
+    ...(import.meta.env?.MODE === 'development' ? [goerli, foundry] : [])
   ],
-  [
-    publicProvider(),
-  ],
-)
+  [publicProvider()]
+);
 
 export const client = createClient({
   autoConnect: true,
@@ -23,23 +21,23 @@ export const client = createClient({
     new CoinbaseWalletConnector({
       chains,
       options: {
-        appName: 'wagmi',
-      },
+        appName: 'wagmi'
+      }
     }),
     new WalletConnectConnector({
       chains,
       options: {
-        qrcode: true,
-      },
+        qrcode: true
+      }
     }),
     new InjectedConnector({
       chains,
       options: {
         name: 'Injected',
-        shimDisconnect: true,
-      },
-    }),
+        shimDisconnect: true
+      }
+    })
   ],
   provider,
-  webSocketProvider,
-})
+  webSocketProvider
+});
