@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root,
+div[data-rk] {
+  @apply h-full;
+}
+
+.react-flow .react-flow__controls {
+  display: flex;
+  top: 0;
+  right: 0;
+  left: auto;
+  bottom: auto;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+}
+
+.react-flow__handle-right {
+  right: -6px;
+}
+
+.react-flow__handle-left {
+  left: -6px;
+}
+
+.react-flow__edge-path {
+  stroke: #b1b1b7;
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.react-flow__edge-path {
+  stroke: #555;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #fff;
+}
+
+.node-picker ::-webkit-scrollbar {
+  @apply w-2;
+}
+
+.node-picker ::-webkit-scrollbar-track {
+  @apply bg-gray-700;
+}
+
+.node-picker ::-webkit-scrollbar-thumb {
+  @apply bg-gray-600;
+}
+
+.react-flow .react-flow__controls {
+  display: flex;
+  top: 0;
+  right: 0;
+  left: auto;
+  bottom: auto;
+}

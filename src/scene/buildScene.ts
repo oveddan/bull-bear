@@ -193,7 +193,6 @@ function applyMaterialModifier(
       if (basic.color) {
         const v = value as Vec3;
         basic.color.setRGB(v.x, v.y, v.z);
-        basic.needsUpdate = true;
       }
       break;
     }
@@ -201,18 +200,18 @@ function applyMaterialModifier(
       const basic = materialRef as MeshBasicMaterial;
 
       basic.opacity = value as number;
-      basic.needsUpdate = true;
 
       break;
     }
     case 'emissiveIntensity': {
-      console.log('updating physical', value);
       const physical = materialRef as MeshPhysicalMaterial;
 
       physical.emissiveIntensity = value as number;
       break;
     }
   }
+
+  materialRef.needsUpdate = true;
 }
 
 function getPropertyValue(property: string, objectRef: Object3D<Event>) {

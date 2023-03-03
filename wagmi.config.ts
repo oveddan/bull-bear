@@ -10,10 +10,15 @@ export default defineConfig({
         Counter: {
           [chains.mainnet.id]: '0x1A61839Eb5fC6eBBcAe01eD5E79062E598792Dac',
           [chains.goerli.id]: '0x78991BB1D194C1235fe285240af8489CFA552151',
-          [chains.foundry.id]: '0x5fbdb2315678afecb367f032d93f642f64180aa3'
+          [chains.foundry.id]: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
+        },
+        BullBear: {
+          [chains.mainnet.id]: '0x1A61839Eb5fC6eBBcAe01eD5E79062E598792Dac',
+          [chains.goerli.id]: '0x78991BB1D194C1235fe285240af8489CFA552151',
+          [chains.foundry.id]: '0x0165878a594ca255338adfa4d48449f69242eb8f'
         }
-      },
-      project: './contracts'
+      }
+      // project: './contracts'
     }),
     react()
   ]

@@ -2,13 +2,17 @@ import {
   FlowsJSON,
   GraphJSON,
   INodeDefinition,
+  NodeConfigurationDescription,
   NodeDefinition,
   NodeParameterJSON,
   NodeParametersJSON,
+  SocketNames,
+  SocketsDefinition,
+  NodeJSON,
   ValueJSON
 } from '@oveddan-behave-graph/core';
 
-export const AutoIdIncrementer = () => {
+export const autoIdIncrementer = () => {
   let value = 0;
 
   const next = () => {
@@ -33,23 +37,34 @@ export type NodeValue =
       };
     };
 
-export type ConfiguredNode = {
-  id: number;
-  definition: INodeDefinition | NodeDefinition;
-  inputValues?: {
-    [key: string]: NodeValue;
-  };
-  inputFlows?: {
-    [key: string]: {
-      fromNodeId: number;
-      fromSocketId: string;
-    };
+type TInputValues<TInput extends SocketsDefinition> = {
+  [key in SocketNames<TInput>]?: NodeValue;
+};
+type TInputFlows<TInput extends SocketsDefinition> = {
+  [key in SocketNames<TInput>]?: {
+    fromNodeId: number;
+    fromSocketId: string;
   };
 };
 
-const toValueJson = (value: string | bigint | boolean): ValueJSON => {
+export type ConfiguredNode<
+  TInput extends SocketsDefinition = SocketsDefinition,
+  TOutput extends SocketsDefinition = SocketsDefinition,
+  TConfig extends NodeConfigurationDescription = NodeConfigurationDescription
+> = {
+  id: number;
+  definition: INodeDefinition<TInput, TOutput, TConfig>;
+  inputValues?: TInputValues<TInput>;
+  inputFlows?: TInputFlows<TInput>;
+};
+
+const toValueJson = (
+  value: string | bigint | boolean | number | undefined
+): ValueJSON | undefined => {
   if (typeof value === 'string') return value;
   if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'undefined') return undefined;
 
   return value.toString();
 };
@@ -57,34 +72,39 @@ const toValueJson = (value: string | bigint | boolean): ValueJSON => {
 export const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
   const nodesJson = nodes.map((node): NodeJSON => {
     const nodeParameters: NodeParametersJSON = Object.fromEntries(
-      Object.entries(node.inputValues || {}).map(([id, nodeDef]) => {
-        let param: NodeParameterJSON;
-        if (typeof nodeDef === 'object' && 'link' in nodeDef) {
-          param = {
-            link: {
-              nodeId: nodeDef.link.nodeId.toString(),
-              socket: nodeDef.link.socketId
-            }
-          };
-        } else {
-          param = {
-            value: toValueJson(nodeDef)
-          };
-        }
+      Object.entries(node.inputValues || {})
+        .map(([id, nodeDef]) => {
+          let param: NodeParameterJSON | undefined;
+          if (typeof nodeDef === 'object' && 'link' in nodeDef) {
+            param = {
+              link: {
+                nodeId: nodeDef.link.nodeId.toString(),
+                socket: nodeDef.link.socketId
+              }
+            };
+          } else {
+            const valueJson = toValueJson(nodeDef);
+            if (valueJson)
+              param = {
+                value: valueJson
+              };
+            else param = undefined;
+          }
 
-        return [id, param];
-      })
+          return [id, param];
+        })
+        .filter(([, param]) => typeof param !== 'undefined')
     );
 
     const edgesFromNode = nodes.flatMap((otherNode) =>
       Object.entries(otherNode.inputFlows || {})
         .filter(([, flow]) => {
-          return flow.fromNodeId === node.id;
+          return flow?.fromNodeId === node.id;
         })
         .map(([socketId, flow]) => ({
           toSocketId: socketId,
           toNodeId: otherNode.id,
-          fromSocketId: flow.fromSocketId
+          fromSocketId: flow!.fromSocketId
         }))
     );
 
@@ -115,3 +135,60 @@ export const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
 
   return result;
 };
+
+export const configuredNodeFactory = () => {
+  const autoCounter = autoIdIncrementer();
+
+  const create = <
+    TInput extends SocketsDefinition,
+    TOutput extends SocketsDefinition,
+    TConfig extends NodeConfigurationDescription
+  >({
+    definition,
+    inputFlows,
+    inputValues
+  }: {
+    definition: INodeDefinition<TInput, TOutput, TConfig> | NodeDefinition;
+    inputValues?: TInputValues<TInput>;
+    inputFlows?: TInputFlows<TInput>;
+  }): ConfiguredNode<TInput, TOutput, TConfig> => {
+    return {
+      id: autoCounter.next(),
+      // @ts-ignore
+      definition: definition,
+      inputValues,
+      inputFlows
+    };
+  };
+
+  return { create };
+};
+
+export const inputFlowFrom = <TOutput extends SocketsDefinition>(
+  {
+    id
+  }: {
+    id: number;
+    definition: {
+      out?: TOutput;
+    };
+  },
+  fromSocketId: SocketNames<TOutput>
+) => ({
+  fromNodeId: id,
+  fromSocketId
+});
+
+export const inputValueLinkFrom = <TOutput extends SocketsDefinition>(
+  {
+    id
+  }: {
+    id: number;
+    definition: {
+      out?: TOutput;
+    };
+  },
+  fromSocketId: SocketNames<TOutput>
+) => ({
+  link: { nodeId: id, socketId: fromSocketId }
+});

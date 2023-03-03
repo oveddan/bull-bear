@@ -31,13 +31,14 @@ const RegisterOnClickListenersOnElements = ({
       return;
     } else if (listeners.path.resource === 'meshes') {
       let nodeSource: Mesh | undefined = undefined;
+      const elementName = listeners.elementName.replace('.', '');
       gltf.scene.traverse((x) => {
-        if (x.name === listeners.elementName.replace('.', '')) {
+        if (x.name.replace('.', '') === elementName) {
           nodeSource = x as Mesh;
         }
       });
       if (!nodeSource) {
-        console.error('no mesh at path ' + listeners.elementName);
+        console.error('no mesh at path ' + elementName);
         return;
       }
       const node = (nodeSource as Mesh).clone() as Mesh;

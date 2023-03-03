@@ -2,8 +2,10 @@
 import { NonEditableScene } from './components/NonEditableScene';
 import './app.css';
 
-import catModel from './assets/chewing.glb';
+import catGraph from './assets/catGraph.json';
+//
 import { Connect } from './components/Connect';
+import { GraphJSON } from '@oveddan-behave-graph/core';
 
 export function App() {
   // const { isConnected } = useAccount();
@@ -14,7 +16,10 @@ export function App() {
 
       <Connect />
 
-      <NonEditableScene modelUrl={catModel} />
+      <NonEditableScene
+        modelUrl={'combined-v2.glb'}
+        graphJson={catGraph as unknown as GraphJSON}
+      />
     </>
   );
 }
