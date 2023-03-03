@@ -19,7 +19,7 @@ import {
   useMergeDependencies,
   useMergeMap
 } from '@oveddan-behave-graph/flow';
-import { useGraphJson } from '../scene/buildGraphJson';
+import { useGraphJson } from '../behave/buildGraphJson';
 import { useSceneRegistry } from '../hooks/useSceneRegistry';
 import { createSceneDependency } from '@oveddan-behave-graph/scene';
 // import { ConnectButton3d } from './ConnectButton3d';

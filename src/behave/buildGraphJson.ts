@@ -2,7 +2,7 @@ import { GraphJSON, NodeDefinition } from '@oveddan-behave-graph/core';
 import { IScene } from '@oveddan-behave-graph/scene';
 import { useMemo } from 'react';
 
-import { gameGraphBuilder } from './gameGraphBuilder';
+import { bullBearGraph } from './bullBearGraph';
 import { toGraphJson } from './graphBuilderUtils';
 
 export const useGraphJson = (
@@ -10,7 +10,7 @@ export const useGraphJson = (
   nodeDefinintions: Record<string, NodeDefinition>
 ): GraphJSON => {
   return useMemo(() => {
-    const nodes = gameGraphBuilder(nodeDefinintions);
+    const nodes = bullBearGraph(nodeDefinintions);
     console.log(scene?.getProperties());
     const result = toGraphJson(nodes);
 

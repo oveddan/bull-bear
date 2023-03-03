@@ -1,23 +1,14 @@
 import {
   Counter,
-  GraphJSON,
-  INodeDefinition,
   NodeDefinition,
   IntegerNodes,
-  NodeJSON,
-  NodeParameterJSON,
-  NodeParametersJSON,
-  ValueJSON,
-  FlowsJSON,
   FloatNodes
 } from '@oveddan-behave-graph/core';
-import { IScene } from '@oveddan-behave-graph/scene';
-import { useMemo } from 'react';
 
 import { OnSceneNodeClick } from '@oveddan-behave-graph/scene';
 import { AutoIdIncrementer, ConfiguredNode } from './graphBuilderUtils';
 
-export const gameGraphBuilder = (
+export const bullBearGraph = (
   nodeDefinitions: Record<string, NodeDefinition>
 ): ConfiguredNode[] => {
   console.log(nodeDefinitions);

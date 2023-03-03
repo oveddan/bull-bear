@@ -1,5 +1,4 @@
 import {
-  makeAsyncNodeDefinition,
   makeEventNodeDefinition,
   makeFlowNodeDefinition,
   NodeCategory,
@@ -133,7 +132,6 @@ function makeSmartContractFunctionNodeDefinitions({
         const poll = async () => {
           const inputs = generateInputArgs(x.inputs, read);
 
-          // console.log({ inputs, contractAddress, name: x.name });
           const result = await readContract({
             chainId,
             abi,
