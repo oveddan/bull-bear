@@ -8,14 +8,14 @@ contract BullBearTest is Test {
   BullBear bullBear;
   address owner;
   uint256 maxSupply;
+  string initialBaseUrl;
 
   function setUp() public {
     owner = vm.addr(1);
     maxSupply = 5;
+    initialBaseUrl = 'ipfs://01231';
     vm.prank(owner);
-    bullBear = new BullBear(maxSupply);
-    // vm.prank(owner);
-    // bullBear.initialize();
+    bullBear = new BullBear(maxSupply, initialBaseUrl);
   }
 
   function test_cannotMintMoreThanMaxSupply() public {
@@ -26,5 +26,23 @@ contract BullBearTest is Test {
     vm.expectRevert();
 
     bullBear.safeMint(minter);
+  }
+
+  function test_mintedTokensHaveCorrectUrl() public {
+    address minter = vm.addr(3);
+    bullBear.safeMint(minter);
+    bullBear.safeMint(minter);
+    assertEq(
+      bullBear.tokenURI(0),
+      string(abi.encodePacked(initialBaseUrl, '0'))
+    );
+    assertEq(
+      bullBear.tokenURI(1),
+      string(abi.encodePacked(initialBaseUrl, '1'))
+    );
+
+    // should revert when token does not exist
+    vm.expectRevert();
+    bullBear.tokenURI(2);
   }
 }
