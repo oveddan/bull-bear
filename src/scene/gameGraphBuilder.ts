@@ -8,7 +8,8 @@ import {
   NodeParameterJSON,
   NodeParametersJSON,
   ValueJSON,
-  FlowsJSON
+  FlowsJSON,
+  FloatNodes
 } from '@oveddan-behave-graph/core';
 import { IScene } from '@oveddan-behave-graph/scene';
 import { useMemo } from 'react';
@@ -19,6 +20,7 @@ import { AutoIdIncrementer, ConfiguredNode } from './graphBuilderUtils';
 export const gameGraphBuilder = (
   nodeDefinitions: Record<string, NodeDefinition>
 ): ConfiguredNode[] => {
+  console.log(nodeDefinitions);
   const autoCounter = AutoIdIncrementer();
 
   const sceneSetBoolean = nodeDefinitions['scene/set/boolean'];
@@ -89,5 +91,96 @@ export const gameGraphBuilder = (
     }
   };
 
-  return [sceneNodeClickConfig, counter, mod, toBoolean, startAnimation];
+  const smartContractIncrement: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: nodeDefinitions['smartContract/counter/increment']!,
+    inputFlows: {
+      flow: {
+        fromNodeId: startAnimation.id,
+        fromSocketId: 'flow'
+      }
+    }
+  };
+
+  const getNumber: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: nodeDefinitions['smartContract/counter/getNumber']!
+  };
+
+  const maxCount = 5;
+
+  const mod5: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: IntegerNodes.Modulus,
+    inputValues: {
+      a: {
+        link: {
+          nodeId: getNumber.id,
+          socketId: '0'
+        }
+      },
+      b: BigInt(maxCount)
+    }
+  };
+
+  const toFloat: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: IntegerNodes.ToFloat,
+    inputValues: {
+      a: {
+        link: {
+          nodeId: mod5.id,
+          socketId: 'result'
+        }
+      }
+    }
+  };
+
+  const toFloatPct: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: FloatNodes.Divide,
+    inputValues: {
+      a: {
+        link: {
+          nodeId: toFloat.id,
+          socketId: 'result'
+        }
+      },
+      b: maxCount
+    }
+  };
+
+  const setEmission: ConfiguredNode = {
+    id: autoCounter.next(),
+    definition: nodeDefinitions['scene/set/float'],
+    inputValues: {
+      jsonPath: 'materials/0/emissiveIntensity',
+      value: {
+        link: {
+          nodeId: toFloatPct.id,
+          socketId: 'result'
+        }
+      }
+    },
+    inputFlows: {
+      flow: {
+        fromNodeId: getNumber.id,
+        fromSocketId: 'flow'
+      }
+    }
+  };
+
+  return [
+    sceneNodeClickConfig,
+    counter,
+    mod,
+    toBoolean,
+    startAnimation,
+    smartContractIncrement,
+    getNumber,
+    mod5,
+    toFloat,
+    toFloatPct,
+    setEmission
+  ];
 };

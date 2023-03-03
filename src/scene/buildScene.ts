@@ -4,6 +4,7 @@ import {
   Event,
   Material,
   MeshBasicMaterial,
+  MeshPhysicalMaterial,
   Object3D,
   Quaternion,
   Vector3,
@@ -196,6 +197,21 @@ function applyMaterialModifier(
       }
       break;
     }
+    case 'opacity': {
+      const basic = materialRef as MeshBasicMaterial;
+
+      basic.opacity = value as number;
+      basic.needsUpdate = true;
+
+      break;
+    }
+    case 'emissiveIntensity': {
+      console.log('updating physical', value);
+      const physical = materialRef as MeshPhysicalMaterial;
+
+      physical.emissiveIntensity = value as number;
+      break;
+    }
   }
 }
 
@@ -251,7 +267,7 @@ export const extractProperties = (gltf: ParsableScene): Properties => {
     'color'
   ];
   const animationProperties = ['playing'];
-  const materialProperties = ['color'];
+  const materialProperties = ['color', 'opacity', 'emissiveIntensity'];
 
   const gltfJson = gltf.parser.json as GLTFJson;
 

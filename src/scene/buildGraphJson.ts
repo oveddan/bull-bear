@@ -1,19 +1,7 @@
-import {
-  Counter,
-  GraphJSON,
-  INodeDefinition,
-  NodeDefinition,
-  IntegerNodes,
-  NodeJSON,
-  NodeParameterJSON,
-  NodeParametersJSON,
-  ValueJSON,
-  FlowsJSON
-} from '@oveddan-behave-graph/core';
+import { GraphJSON, NodeDefinition } from '@oveddan-behave-graph/core';
 import { IScene } from '@oveddan-behave-graph/scene';
 import { useMemo } from 'react';
 
-import { OnSceneNodeClick } from '@oveddan-behave-graph/scene';
 import { gameGraphBuilder } from './gameGraphBuilder';
 import { toGraphJson } from './graphBuilderUtils';
 
@@ -23,9 +11,9 @@ export const useGraphJson = (
 ): GraphJSON => {
   return useMemo(() => {
     const nodes = gameGraphBuilder(nodeDefinintions);
-    return toGraphJson(nodes);
-    return {
-      nodes: []
-    };
+    console.log(scene?.getProperties());
+    const result = toGraphJson(nodes);
+
+    return result;
   }, [scene, nodeDefinintions]);
 };

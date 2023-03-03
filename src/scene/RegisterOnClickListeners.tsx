@@ -75,6 +75,7 @@ export const RegisterOnClickListeners = ({
   gltf?: GLTF & ObjectMap;
 }) => {
   const [hovered, setHovered] = useState(false);
+
   useCursor(hovered, 'pointer', 'auto');
 
   if (!gltf) return null;

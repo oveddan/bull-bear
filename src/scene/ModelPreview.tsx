@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { dataUrlFromFile } from '../hooks/useSaveAndLoad';
 import { useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stage, useCursor } from '@react-three/drei';
+import { OrbitControls, Stage } from '@react-three/drei';
 import { Object3D } from 'three';
 
 const ModelPreviewInner = ({ fileUrl }: { fileUrl: string }) => {
@@ -13,7 +13,13 @@ const ModelPreviewInner = ({ fileUrl }: { fileUrl: string }) => {
   return (
     <Canvas>
       <OrbitControls makeDefault target={mainRef?.position} />
-      <Stage shadows adjustCamera={false} intensity={1} environment="city" preset="rembrandt">
+      <Stage
+        shadows
+        adjustCamera={false}
+        intensity={1}
+        environment="city"
+        preset="rembrandt"
+      >
         <primitive object={gltf.scene} ref={setMainRef} />
       </Stage>
     </Canvas>

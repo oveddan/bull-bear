@@ -23,6 +23,7 @@ export const AutoIdIncrementer = () => {
 
 export type NodeValue =
   | string
+  | number
   | bigint
   | boolean
   | {
@@ -108,7 +109,9 @@ export const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
     };
   });
 
-  return {
+  const result: GraphJSON = {
     nodes: nodesJson
   };
+
+  return result;
 };

@@ -16,7 +16,8 @@ import {
   useDependency,
   useGraphRunner,
   // useGraphRunner,
-  useMergeDependencies
+  useMergeDependencies,
+  useMergeMap
 } from '@oveddan-behave-graph/flow';
 import { useGraphJson } from '../scene/buildGraphJson';
 import { useSceneRegistry } from '../hooks/useSceneRegistry';
@@ -24,6 +25,7 @@ import { createSceneDependency } from '@oveddan-behave-graph/scene';
 // import { ConnectButton3d } from './ConnectButton3d';
 import { Context as WagmiContext } from 'wagmi';
 import { SceneInner } from './SceneInner';
+import { useGameContractNodeDefinitions } from '../hooks/useGameContractNodeDefinitions';
 // import { useWhyDidYouUpdate } from 'use-why-did-you-update';
 export const NonEditableScene = ({ modelUrl }: { modelUrl: string }) => {
   const gltf = useGLTF(modelUrl) as GLTF & ObjectMap;
@@ -35,10 +37,17 @@ export const NonEditableScene = ({ modelUrl }: { modelUrl: string }) => {
     dependencies: coreDependencies
   } = useCoreRegistry();
 
+  const gameContractNodeDefinitions = useGameContractNodeDefinitions();
+
+  const mergedDefinitions = useMergeMap(
+    coreNodeDefinitions,
+    gameContractNodeDefinitions
+  );
+
   // get the possible nodes that can be defined for the behavior graph,
   // by merging the core nodes with the scene nodes
   const { nodeDefinitions /*, valuesDefinitions*/ } = useSceneRegistry({
-    existingNodeDefinitions: coreNodeDefinitions,
+    existingNodeDefinitions: mergedDefinitions,
     existingValuesDefinitions: coreValueDefinitions
   });
 
@@ -92,7 +101,7 @@ export const NonEditableScene = ({ modelUrl }: { modelUrl: string }) => {
             target={[0, 0, 0]} // Target position (optional = undefined)
           />
         </Environment>
-        <Stage intensity={0.5}>
+        <Stage intensity={0.1}>
           <SceneInner
             setMainRef={setMainRef}
             gltf={gltf}
