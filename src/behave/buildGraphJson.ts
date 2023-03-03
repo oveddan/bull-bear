@@ -12,6 +12,7 @@ export const useGraphJson = (
   return useMemo(() => {
     const nodes = bullBearGraph(nodeDefinintions);
     console.log(scene?.getProperties());
+    console.log(scene?.getRaycastableProperties());
     const result = toGraphJson(nodes);
 
     return result;

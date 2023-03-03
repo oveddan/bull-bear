@@ -20,7 +20,7 @@ export const bullBearGraph = (
     id: autoCounter.next(),
     definition: OnSceneNodeClick,
     inputValues: {
-      jsonPath: 'meshes/8'
+      jsonPath: 'meshes/0'
     }
   };
 
@@ -66,7 +66,7 @@ export const bullBearGraph = (
     id: autoCounter.next(),
     definition: sceneSetBoolean!,
     inputValues: {
-      jsonPath: 'animations/0/playing',
+      jsonPath: 'animations/1/playing',
       value: {
         link: {
           nodeId: toBoolean.id,

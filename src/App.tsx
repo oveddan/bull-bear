@@ -2,7 +2,7 @@
 import { NonEditableScene } from './components/NonEditableScene';
 import './app.css';
 
-import catModel from './assets/chewing.glb';
+import catModel from './assets/combined-v2.glb';
 import { Connect } from './components/Connect';
 
 export function App() {
