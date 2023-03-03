@@ -14,11 +14,26 @@ import {
 } from './graphBuilderUtils';
 
 export const bullBearGraph = (
-  nodeDefinitions: Record<string, NodeDefinition>
+  nodeDefinitions: Record<string, NodeDefinition>,
+  bullBearContractAddress: string
 ): ConfiguredNode[] => {
   const factory = configuredNodeFactory();
 
   const sceneSetBoolean = nodeDefinitions['scene/set/boolean'];
+
+  const tokenId = factory.create({
+    definition: IntegerNodes.Constant,
+    inputValues: {
+      a: BigInt(1)
+    }
+  });
+
+  const ownerOf = factory.create({
+    definition: nodeDefinitions['smartContract/bullBear/ownerOf'],
+    inputFlows: {
+      '0': inputFlowFrom(tokenId, 'result')
+    }
+  });
 
   const sceneNodeClickConfig = factory.create({
     definition: OnSceneNodeClick,
@@ -60,15 +75,18 @@ export const bullBearGraph = (
     }
   });
 
-  const smartContractIncrement = factory.create({
-    definition: nodeDefinitions['smartContract/counter/increment']!,
-    inputFlows: {
-      flow: inputFlowFrom(startAnimation, 'flow')
-    }
-  });
+  // const smartContractIncrement = factory.create({
+  //   definition: nodeDefinitions['smartContract/counter/increment']!,
+  //   inputFlows: {
+  //     flow: inputFlowFrom(startAnimation, 'flow')
+  //   }
+  // });
 
-  const getNumber = factory.create({
-    definition: nodeDefinitions['smartContract/counter/getNumber']!
+  const getHappiness = factory.create({
+    definition: IntegerNodes.Constant,
+    inputValues: {
+      a: BigInt(1)
+    }
   });
 
   const maxCount = 5;
@@ -76,7 +94,7 @@ export const bullBearGraph = (
   const mod5 = factory.create({
     definition: IntegerNodes.Modulus,
     inputValues: {
-      a: inputValueLinkFrom(getNumber, '0'),
+      a: inputValueLinkFrom(getHappiness, 'value'),
       b: BigInt(maxCount)
     }
   });
@@ -103,7 +121,7 @@ export const bullBearGraph = (
       value: inputValueLinkFrom(toFloatPct, 'result')
     },
     inputFlows: {
-      flow: inputFlowFrom(getNumber, 'flow')
+      flow: inputFlowFrom(getHappiness, 'flow')
     }
   });
 
@@ -112,9 +130,11 @@ export const bullBearGraph = (
     counter,
     mod,
     toBoolean,
+    tokenId,
+    ownerOf,
     startAnimation,
-    smartContractIncrement,
-    getNumber,
+    // smartContractIncrement,
+    getHappiness,
     mod5,
     toFloat,
     toFloatPct,

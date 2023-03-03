@@ -10,6 +10,28 @@ import {
 } from '../generated';
 import { makeSmartContractNodeDefinitions } from '../nodes/makeSmartContractNodeDefintions';
 
+export const makeAllContractDefinitions = ({
+  chainId
+}: {
+  chainId: number | undefined;
+}) => ({
+  ...makeSmartContractNodeDefinitions({
+    chainId,
+    abi: counterABI,
+    contractName: 'counter'
+  }),
+  ...makeSmartContractNodeDefinitions({
+    chainId,
+    abi: bullBearABI,
+    contractName: 'bullBear'
+  }),
+  ...makeSmartContractNodeDefinitions({
+    chainId,
+    abi: bullBearFoodABI,
+    contractName: 'bullBearFood'
+  })
+});
+
 export const useGameContractNodeDefinitions = () => {
   const counterContract = useCounter();
   const bullBearContract = useBullBear();
@@ -18,32 +40,5 @@ export const useGameContractNodeDefinitions = () => {
   const bullBearContractAddress = bullBearContract?.address;
   const chainId = useChainId();
 
-  return useMemo(
-    () => ({
-      ...makeSmartContractNodeDefinitions({
-        contractAddress: counterContractAddress,
-        chainId,
-        abi: counterABI,
-        contractName: 'counter'
-      }),
-      ...makeSmartContractNodeDefinitions({
-        contractAddress: bullBearContractAddress,
-        chainId,
-        abi: bullBearABI,
-        contractName: 'bullBear'
-      }),
-      ...makeSmartContractNodeDefinitions({
-        contractAddress: bullBearFoodAddress,
-        chainId,
-        abi: bullBearFoodABI,
-        contractName: 'bullBearFood'
-      })
-    }),
-    [
-      counterContractAddress,
-      bullBearContractAddress,
-      bullBearFoodAddress,
-      chainId
-    ]
-  );
+  return useMemo(() => makeAllContractDefinitions({ chainId }), []);
 };

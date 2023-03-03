@@ -10,6 +10,7 @@ import {
   SocketsDefinition,
   ValueJSON
 } from '@oveddan-behave-graph/core';
+import { useBullBearOwnerOf } from '../generated';
 
 export const autoIdIncrementer = () => {
   let value = 0;

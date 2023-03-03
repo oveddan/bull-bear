@@ -20,7 +20,10 @@ const toSocketType = (abiType: string) => {
   if (abiType.includes('bytes')) return 'string';
   if (abiType.includes('bool')) return 'boolean';
 
-  throw new Error('unknown abi type of ' + abiType);
+  console.error('unknown abi type of ' + abiType);
+
+  // todo - what to do when array?
+  return 'string';
 };
 
 const toSockets = (abiParameters: readonly AbiParameter[]): SocketsMap => {
@@ -70,12 +73,10 @@ const generateInputArgs = (
 function makeSmartContractFunctionNodeDefinitions({
   abi,
   name,
-  contractAddress,
   chainId
 }: {
   abi: Abi;
   name: string;
-  contractAddress: `0x${string}` | undefined;
   chainId: number | undefined;
 }) {
   const functions = abi.filter(
@@ -105,7 +106,11 @@ function makeSmartContractFunctionNodeDefinitions({
       typeName: typeName,
       category: NodeCategory.Event,
       label: `Read ${name} contract ${x.name}`,
-      in: inputs,
+      in: {
+        ...inputs,
+        contractAddress: 'string',
+        chainId: 'integer'
+      },
       configuration: {
         pollInterval: {
           valueType: 'integer',
@@ -122,15 +127,26 @@ function makeSmartContractFunctionNodeDefinitions({
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       init: ({ read, configuration, write, commit }) => {
-        if (!contractAddress) {
-          console.error('no contract address');
-          return;
-        }
-
         const pollInterval = configuration.pollInterval || defaultPollInterval;
 
         const poll = async () => {
-          const inputs = generateInputArgs(x.inputs, read);
+          const contractAddress = read('contractAddress') as
+            | `0x${string}`
+            | undefined;
+          if (!contractAddress) {
+            console.error('no contract address for node');
+            return;
+          }
+          if (!chainId) {
+            console.error('no chain id for node');
+            return;
+          }
+
+          const inputs = generateInputArgs(
+            x.inputs,
+            // @ts-ignore
+            read
+          );
 
           const result = await readContract({
             chainId,
@@ -175,6 +191,10 @@ function makeSmartContractFunctionNodeDefinitions({
       },
       initialState: undefined,
       triggered: ({ read, commit, graph }) => {
+        const contractAddress = read('contractAddress') as
+          | `0x${string}`
+          | undefined;
+
         if (!contractAddress) {
           console.error('no contract address for node');
           return;
@@ -234,12 +254,10 @@ export function makeSmartContractNodeDefinitions<
 >({
   abi,
   contractName: name,
-  contractAddress,
   chainId
 }: {
-  abi: Abi;
+  abi: TAbi;
   contractName: string;
-  contractAddress: `0x${string}` | undefined;
   chainId: number | undefined;
 }): Record<string, NodeDefinition> {
   // const contractName = abi.e
@@ -247,7 +265,6 @@ export function makeSmartContractNodeDefinitions<
   const allDefinitions = makeSmartContractFunctionNodeDefinitions({
     abi,
     name,
-    contractAddress,
     chainId
   });
 

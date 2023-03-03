@@ -95,13 +95,13 @@ export const NonEditableScene = ({ modelUrl }: { modelUrl: string }) => {
         <Environment>
           <Lightformer
             form="rect" // circle | ring | rect (optional, default = rect)
-            intensity={1} // power level (optional = 1)
+            intensity={0.5} // power level (optional = 1)
             color="white" // (optional = white)
             scale={[10, 5]} // Scale it any way you prefer (optional = [1, 1])
             target={[0, 0, 0]} // Target position (optional = undefined)
           />
         </Environment>
-        <Stage intensity={0.1}>
+        <Stage intensity={0.2}>
           <SceneInner
             setMainRef={setMainRef}
             gltf={gltf}
