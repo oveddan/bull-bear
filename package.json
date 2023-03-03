@@ -31,7 +31,7 @@
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.7.1",
     "react-split-pane": "^0.1.92",
-    "reactflow": "^11.5.6",
+    "reactflow": "^11.3.2",
     "suspend-react": "^0.0.9",
     "three": "^0.150.1",
     "three-stdlib": "^2.21.8",

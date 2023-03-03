@@ -67,6 +67,10 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   ) public view override(ERC721, ERC721URIStorage) returns (bool) {
     return super.supportsInterface(interfaceId);
   }
+
+  function getHappiness(uint256 tokenId) public view returns (uint8) {
+    return happiness[tokenId];
+  }
 }
 
 /*

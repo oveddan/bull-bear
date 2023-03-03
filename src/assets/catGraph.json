@@ -1,1 +1,122 @@
-{}
+{
+  "nodes": [
+    {
+      "id": "acb835fa-1c98-40a3-bf68-98f1ba58337e",
+      "type": "smartContract/bullBear/safeMint",
+      "metadata": {
+        "positionX": "660.3460646441724",
+        "positionY": "411.62486180308946"
+      },
+      "parameters": {
+        "to": {
+          "link": {
+            "nodeId": "45ff14f7-3158-4283-95e8-8201ef64d2e5",
+            "socket": "address"
+          }
+        }
+      }
+    },
+    {
+      "id": "45ff14f7-3158-4283-95e8-8201ef64d2e5",
+      "type": "currentAddress",
+      "metadata": {
+        "positionX": "281.3865761591612",
+        "positionY": "376.5360202766996"
+      }
+    },
+    {
+      "id": "ad61e3f7-2f37-4d46-915a-010cc6e3b496",
+      "type": "scene/nodeClick",
+      "metadata": {
+        "positionX": "188.40114611422797",
+        "positionY": "476.5392186269109"
+      },
+      "parameters": {
+        "jsonPath": {
+          "value": "nodes/26"
+        }
+      },
+      "flows": {
+        "flow": {
+          "nodeId": "acb835fa-1c98-40a3-bf68-98f1ba58337e",
+          "socket": "flow"
+        }
+      }
+    },
+    {
+      "id": "2b1e9522-2422-4d68-9cb6-507021ee1b57",
+      "type": "math/divide/float",
+      "metadata": {
+        "positionX": "710.5244178167085",
+        "positionY": "42.5771961452397"
+      },
+      "parameters": {
+        "b": {
+          "value": "100"
+        },
+        "a": {
+          "link": {
+            "nodeId": "389b2e3d-202f-4dfe-8472-e3b21721514b",
+            "socket": "result"
+          }
+        }
+      }
+    },
+    {
+      "id": "594dfa4c-68c7-4a35-af84-aa5b6259e8db",
+      "type": "scene/set/float",
+      "metadata": {
+        "positionX": "954.1004102194343",
+        "positionY": "95.73735354271379"
+      },
+      "parameters": {
+        "jsonPath": {
+          "value": "materials/0/emissiveIntensity"
+        },
+        "value": {
+          "link": {
+            "nodeId": "2b1e9522-2422-4d68-9cb6-507021ee1b57",
+            "socket": "result"
+          }
+        }
+      }
+    },
+    {
+      "id": "389b2e3d-202f-4dfe-8472-e3b21721514b",
+      "type": "math/toFloat/integer",
+      "metadata": {
+        "positionX": "507.97701950297494",
+        "positionY": "44.05176237395397"
+      },
+      "parameters": {
+        "a": {
+          "link": {
+            "nodeId": "071f3eeb-f980-4640-8f75-135839ce6386",
+            "socket": "0"
+          }
+        }
+      }
+    },
+    {
+      "id": "071f3eeb-f980-4640-8f75-135839ce6386",
+      "type": "smartContract/bullBear/getHappiness",
+      "metadata": {
+        "positionX": "131.14253653252814",
+        "positionY": "133.0588100308539"
+      },
+      "parameters": {
+        "tokenId": {
+          "value": "0"
+        }
+      },
+      "flows": {
+        "flow": {
+          "nodeId": "594dfa4c-68c7-4a35-af84-aa5b6259e8db",
+          "socket": "flow"
+        }
+      }
+    }
+  ],
+  "variables": [],
+  "customEvents": []
+}

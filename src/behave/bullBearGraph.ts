@@ -14,8 +14,8 @@ import {
 } from './graphBuilderUtils';
 
 export const bullBearGraph = (
-  nodeDefinitions: Record<string, NodeDefinition>,
-  bullBearContractAddress: string
+  nodeDefinitions: Record<string, NodeDefinition>
+  // bullBearContractAddress: string
 ): ConfiguredNode[] => {
   const factory = configuredNodeFactory();
 

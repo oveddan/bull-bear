@@ -8,7 +8,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 const getAllowedChains = () =>
-  import.meta.env?.MODE === 'development'
+  import.meta.env.MODE === 'development'
     ? [foundry, sepolia, goerli, mainnet]
     : [sepolia, goerli, mainnet];
 

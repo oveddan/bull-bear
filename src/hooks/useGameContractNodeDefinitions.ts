@@ -3,42 +3,59 @@ import { useChainId } from 'wagmi';
 import {
   bullBearABI,
   bullBearFoodABI,
-  counterABI,
   useBullBear,
-  useBullBearBullBearFood,
-  useCounter
+  useBullBearBullBearFood
 } from '../generated';
-import { makeSmartContractNodeDefinitions } from '../nodes/makeSmartContractNodeDefintions';
+import {
+  makeSmartContractNodeDefinitions,
+  useCurrentAddressNodeDefinition
+} from '../nodes/makeSmartContractNodeDefintions';
 
 export const makeAllContractDefinitions = ({
-  chainId
+  chainId,
+  bullBearAddress,
+  bullBearFoodAddress
 }: {
   chainId: number | undefined;
+  bullBearAddress: `0x${string}` | undefined;
+  bullBearFoodAddress: `0x${string}` | undefined;
 }) => ({
   ...makeSmartContractNodeDefinitions({
     chainId,
-    abi: counterABI,
-    contractName: 'counter'
-  }),
-  ...makeSmartContractNodeDefinitions({
-    chainId,
     abi: bullBearABI,
-    contractName: 'bullBear'
+    contractName: 'bullBear',
+    contractAddress: bullBearAddress
   }),
   ...makeSmartContractNodeDefinitions({
     chainId,
     abi: bullBearFoodABI,
-    contractName: 'bullBearFood'
+    contractName: 'bullBearFood',
+    contractAddress: bullBearFoodAddress
   })
 });
 
 export const useGameContractNodeDefinitions = () => {
-  const counterContract = useCounter();
   const bullBearContract = useBullBear();
   const { data: bullBearFoodAddress } = useBullBearBullBearFood();
-  const counterContractAddress = counterContract?.address;
   const bullBearContractAddress = bullBearContract?.address;
   const chainId = useChainId();
 
-  return useMemo(() => makeAllContractDefinitions({ chainId }), []);
+  const currentAddressDefinition = useCurrentAddressNodeDefinition();
+
+  return useMemo(
+    () => ({
+      ...currentAddressDefinition,
+      ...makeAllContractDefinitions({
+        chainId,
+        bullBearAddress: bullBearContractAddress,
+        bullBearFoodAddress
+      })
+    }),
+    [
+      bullBearContractAddress,
+      bullBearFoodAddress,
+      chainId,
+      currentAddressDefinition
+    ]
+  );
 };

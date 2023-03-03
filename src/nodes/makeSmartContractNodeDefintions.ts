@@ -8,6 +8,8 @@ import {
 import { prepareWriteContract, readContract, writeContract } from '@wagmi/core';
 import { Abi, AbiFunction, AbiParameter } from 'abitype';
 import { BigNumber } from 'ethers';
+import { useMemo } from 'react';
+import { useAccount } from 'wagmi';
 
 type AbiFunctionThatIsFunction = AbiFunction & { type: 'function' };
 
@@ -34,8 +36,6 @@ const toSockets = (abiParameters: readonly AbiParameter[]): SocketsMap => {
   );
 };
 
-const contractAddressKey = 'contractAddress';
-
 const toExecuteTransactionInputs = (
   abiParameters: readonly AbiParameter[],
   isPayable: boolean
@@ -51,7 +51,6 @@ const toExecuteTransactionInputs = (
     : {};
 
   return {
-    [contractAddressKey]: 'string',
     ...valueInputs,
     ...payableInput,
     flow: 'flow'
@@ -73,11 +72,13 @@ const generateInputArgs = (
 function makeSmartContractFunctionNodeDefinitions({
   abi,
   name,
-  chainId
+  chainId,
+  contractAddress
 }: {
   abi: Abi;
   name: string;
   chainId: number | undefined;
+  contractAddress: `0x${string}` | undefined;
 }) {
   const functions = abi.filter(
     (x) => x.type === 'function'
@@ -107,9 +108,8 @@ function makeSmartContractFunctionNodeDefinitions({
       category: NodeCategory.Event,
       label: `Read ${name} contract ${x.name}`,
       in: {
-        ...inputs,
-        contractAddress: 'string',
-        chainId: 'integer'
+        ...inputs
+        // contractAddress: 'string'
       },
       configuration: {
         pollInterval: {
@@ -130,9 +130,6 @@ function makeSmartContractFunctionNodeDefinitions({
         const pollInterval = configuration.pollInterval || defaultPollInterval;
 
         const poll = async () => {
-          const contractAddress = read('contractAddress') as
-            | `0x${string}`
-            | undefined;
           if (!contractAddress) {
             console.error('no contract address for node');
             return;
@@ -157,8 +154,14 @@ function makeSmartContractFunctionNodeDefinitions({
           });
 
           // for now assume result is 1 value
-          const asBigNumber = result as BigNumber;
-          const toBigInt = asBigNumber.toBigInt();
+          let toBigInt: bigint;
+          if (typeof result === 'number') {
+            toBigInt = BigInt(result);
+          } else {
+            toBigInt = (result as BigNumber).toBigInt();
+          }
+
+          console.log('got result', { toBigInt });
 
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
@@ -182,6 +185,8 @@ function makeSmartContractFunctionNodeDefinitions({
     const typeName = `smartContract/${name}/${x.name}`;
     return makeFlowNodeDefinition({
       typeName,
+      label: `Write to ${name} contract ${x.name}`,
+
       category: NodeCategory.Flow,
       in: toExecuteTransactionInputs(x.inputs, x.stateMutability === 'payable'),
       out: {
@@ -191,10 +196,6 @@ function makeSmartContractFunctionNodeDefinitions({
       },
       initialState: undefined,
       triggered: ({ read, commit, graph }) => {
-        const contractAddress = read('contractAddress') as
-          | `0x${string}`
-          | undefined;
-
         if (!contractAddress) {
           console.error('no contract address for node');
           return;
@@ -207,7 +208,7 @@ function makeSmartContractFunctionNodeDefinitions({
         const args = generateInputArgs(x.inputs, read);
 
         (async () => {
-          console.log('writing to', { contractAddress, name: x.name });
+          console.log('writing to', { contractAddress, name: x.name, args });
           const config = await prepareWriteContract({
             chainId,
             abi,
@@ -254,21 +255,49 @@ export function makeSmartContractNodeDefinitions<
 >({
   abi,
   contractName: name,
-  chainId
+  chainId,
+  contractAddress
 }: {
   abi: TAbi;
   contractName: string;
   chainId: number | undefined;
+  contractAddress: `0x${string}` | undefined;
 }): Record<string, NodeDefinition> {
   // const contractName = abi.e
 
   const allDefinitions = makeSmartContractFunctionNodeDefinitions({
     abi,
     name,
-    chainId
+    chainId,
+    contractAddress
   });
 
   return Object.fromEntries(
     allDefinitions.map((x) => [x.typeName, x] as const)
   );
 }
+
+export const useCurrentAddressNodeDefinition = () => {
+  const currentAddress = useAccount().address;
+
+  return useMemo(() => {
+    if (!currentAddress) return {};
+
+    return {
+      currentAddress: makeEventNodeDefinition({
+        typeName: 'account/currentAddress',
+        label: "logged in account's address",
+        category: NodeCategory.Event,
+        in: {},
+        out: {
+          address: 'string'
+        },
+        initialState: undefined,
+        init: ({ write }) => {
+          write('address', currentAddress);
+        },
+        dispose: () => {}
+      })
+    };
+  }, [currentAddress]);
+};

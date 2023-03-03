@@ -8,9 +8,9 @@ import {
   NodeParametersJSON,
   SocketNames,
   SocketsDefinition,
+  NodeJSON,
   ValueJSON
 } from '@oveddan-behave-graph/core';
-import { useBullBearOwnerOf } from '../generated';
 
 export const autoIdIncrementer = () => {
   let value = 0;
@@ -58,9 +58,13 @@ export type ConfiguredNode<
   inputFlows?: TInputFlows<TInput>;
 };
 
-const toValueJson = (value: string | bigint | boolean): ValueJSON => {
+const toValueJson = (
+  value: string | bigint | boolean | number | undefined
+): ValueJSON | undefined => {
   if (typeof value === 'string') return value;
   if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'undefined') return undefined;
 
   return value.toString();
 };
@@ -68,34 +72,39 @@ const toValueJson = (value: string | bigint | boolean): ValueJSON => {
 export const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
   const nodesJson = nodes.map((node): NodeJSON => {
     const nodeParameters: NodeParametersJSON = Object.fromEntries(
-      Object.entries(node.inputValues || {}).map(([id, nodeDef]) => {
-        let param: NodeParameterJSON;
-        if (typeof nodeDef === 'object' && 'link' in nodeDef) {
-          param = {
-            link: {
-              nodeId: nodeDef.link.nodeId.toString(),
-              socket: nodeDef.link.socketId
-            }
-          };
-        } else {
-          param = {
-            value: toValueJson(nodeDef)
-          };
-        }
+      Object.entries(node.inputValues || {})
+        .map(([id, nodeDef]) => {
+          let param: NodeParameterJSON | undefined;
+          if (typeof nodeDef === 'object' && 'link' in nodeDef) {
+            param = {
+              link: {
+                nodeId: nodeDef.link.nodeId.toString(),
+                socket: nodeDef.link.socketId
+              }
+            };
+          } else {
+            const valueJson = toValueJson(nodeDef);
+            if (valueJson)
+              param = {
+                value: valueJson
+              };
+            else param = undefined;
+          }
 
-        return [id, param];
-      })
+          return [id, param];
+        })
+        .filter(([, param]) => typeof param !== 'undefined')
     );
 
     const edgesFromNode = nodes.flatMap((otherNode) =>
       Object.entries(otherNode.inputFlows || {})
         .filter(([, flow]) => {
-          return flow.fromNodeId === node.id;
+          return flow?.fromNodeId === node.id;
         })
         .map(([socketId, flow]) => ({
           toSocketId: socketId,
           toNodeId: otherNode.id,
-          fromSocketId: flow.fromSocketId
+          fromSocketId: flow!.fromSocketId
         }))
     );
 
