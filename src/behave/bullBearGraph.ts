@@ -6,160 +6,106 @@ import {
 } from '@oveddan-behave-graph/core';
 
 import { OnSceneNodeClick } from '@oveddan-behave-graph/scene';
-import { AutoIdIncrementer, ConfiguredNode } from './graphBuilderUtils';
+import {
+  ConfiguredNode,
+  configuredNodeFactory,
+  inputFlowFrom,
+  inputValueLinkFrom
+} from './graphBuilderUtils';
 
 export const bullBearGraph = (
   nodeDefinitions: Record<string, NodeDefinition>
 ): ConfiguredNode[] => {
-  console.log(nodeDefinitions);
-  const autoCounter = AutoIdIncrementer();
+  const factory = configuredNodeFactory();
 
   const sceneSetBoolean = nodeDefinitions['scene/set/boolean'];
 
-  const sceneNodeClickConfig: ConfiguredNode = {
-    id: autoCounter.next(),
+  const sceneNodeClickConfig = factory.create({
     definition: OnSceneNodeClick,
     inputValues: {
       jsonPath: 'meshes/0'
     }
-  };
+  });
 
-  const counter: ConfiguredNode = {
-    id: autoCounter.next(),
+  const counter = factory.create({
     definition: Counter,
     inputFlows: {
-      flow: {
-        fromNodeId: sceneNodeClickConfig.id,
-        fromSocketId: 'flow'
-      }
+      flow: inputFlowFrom(sceneNodeClickConfig, 'flow')
     }
-  };
+  });
 
-  const mod: ConfiguredNode = {
-    id: autoCounter.next(),
+  const mod = factory.create({
     definition: IntegerNodes.Modulus,
     inputValues: {
-      a: {
-        link: {
-          nodeId: counter.id,
-          socketId: 'count'
-        }
-      },
+      a: inputValueLinkFrom(counter, 'count'),
       b: BigInt(2)
     }
-  };
+  });
 
-  const toBoolean: ConfiguredNode = {
-    id: autoCounter.next(),
+  const toBoolean = factory.create({
     definition: IntegerNodes.toBoolean,
     inputValues: {
-      a: {
-        link: {
-          nodeId: mod.id,
-          socketId: 'result'
-        }
-      }
+      a: inputValueLinkFrom(mod, 'result')
     }
-  };
+  });
 
-  const startAnimation: ConfiguredNode = {
-    id: autoCounter.next(),
+  const startAnimation = factory.create({
     definition: sceneSetBoolean!,
     inputValues: {
       jsonPath: 'animations/1/playing',
-      value: {
-        link: {
-          nodeId: toBoolean.id,
-          socketId: 'result'
-        }
-      }
+      value: inputValueLinkFrom(toBoolean, 'result')
     },
     inputFlows: {
-      flow: {
-        fromNodeId: counter.id,
-        fromSocketId: 'flow'
-      }
+      flow: inputFlowFrom(counter, 'flow')
     }
-  };
+  });
 
-  const smartContractIncrement: ConfiguredNode = {
-    id: autoCounter.next(),
+  const smartContractIncrement = factory.create({
     definition: nodeDefinitions['smartContract/counter/increment']!,
     inputFlows: {
-      flow: {
-        fromNodeId: startAnimation.id,
-        fromSocketId: 'flow'
-      }
+      flow: inputFlowFrom(startAnimation, 'flow')
     }
-  };
+  });
 
-  const getNumber: ConfiguredNode = {
-    id: autoCounter.next(),
+  const getNumber = factory.create({
     definition: nodeDefinitions['smartContract/counter/getNumber']!
-  };
+  });
 
   const maxCount = 5;
 
-  const mod5: ConfiguredNode = {
-    id: autoCounter.next(),
+  const mod5 = factory.create({
     definition: IntegerNodes.Modulus,
     inputValues: {
-      a: {
-        link: {
-          nodeId: getNumber.id,
-          socketId: '0'
-        }
-      },
+      a: inputValueLinkFrom(getNumber, '0'),
       b: BigInt(maxCount)
     }
-  };
+  });
 
-  const toFloat: ConfiguredNode = {
-    id: autoCounter.next(),
+  const toFloat = factory.create({
     definition: IntegerNodes.ToFloat,
     inputValues: {
-      a: {
-        link: {
-          nodeId: mod5.id,
-          socketId: 'result'
-        }
-      }
+      a: inputValueLinkFrom(mod5, 'result')
     }
-  };
+  });
 
-  const toFloatPct: ConfiguredNode = {
-    id: autoCounter.next(),
+  const toFloatPct = factory.create({
     definition: FloatNodes.Divide,
     inputValues: {
-      a: {
-        link: {
-          nodeId: toFloat.id,
-          socketId: 'result'
-        }
-      },
+      a: inputValueLinkFrom(toFloat, 'result'),
       b: maxCount
     }
-  };
+  });
 
-  const setEmission: ConfiguredNode = {
-    id: autoCounter.next(),
+  const setEmission = factory.create({
     definition: nodeDefinitions['scene/set/float'],
     inputValues: {
       jsonPath: 'materials/0/emissiveIntensity',
-      value: {
-        link: {
-          nodeId: toFloatPct.id,
-          socketId: 'result'
-        }
-      }
+      value: inputValueLinkFrom(toFloatPct, 'result')
     },
     inputFlows: {
-      flow: {
-        fromNodeId: getNumber.id,
-        fromSocketId: 'flow'
-      }
+      flow: inputFlowFrom(getNumber, 'flow')
     }
-  };
+  });
 
   return [
     sceneNodeClickConfig,

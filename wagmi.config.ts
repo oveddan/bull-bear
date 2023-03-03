@@ -15,7 +15,7 @@ export default defineConfig({
         BullBear: {
           [chains.mainnet.id]: '0x1A61839Eb5fC6eBBcAe01eD5E79062E598792Dac',
           [chains.goerli.id]: '0x78991BB1D194C1235fe285240af8489CFA552151',
-          [chains.foundry.id]: '0x5fbdb2315678afecb367f032d93f642f64180aa3'
+          [chains.foundry.id]: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9'
         }
       }
       // project: './contracts'

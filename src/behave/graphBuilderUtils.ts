@@ -2,13 +2,16 @@ import {
   FlowsJSON,
   GraphJSON,
   INodeDefinition,
+  NodeConfigurationDescription,
   NodeDefinition,
   NodeParameterJSON,
   NodeParametersJSON,
+  SocketNames,
+  SocketsDefinition,
   ValueJSON
 } from '@oveddan-behave-graph/core';
 
-export const AutoIdIncrementer = () => {
+export const autoIdIncrementer = () => {
   let value = 0;
 
   const next = () => {
@@ -33,18 +36,25 @@ export type NodeValue =
       };
     };
 
-export type ConfiguredNode = {
+type TInputValues<TInput extends SocketsDefinition> = {
+  [key in SocketNames<TInput>]?: NodeValue;
+};
+type TInputFlows<TInput extends SocketsDefinition> = {
+  [key in SocketNames<TInput>]?: {
+    fromNodeId: number;
+    fromSocketId: string;
+  };
+};
+
+export type ConfiguredNode<
+  TInput extends SocketsDefinition = SocketsDefinition,
+  TOutput extends SocketsDefinition = SocketsDefinition,
+  TConfig extends NodeConfigurationDescription = NodeConfigurationDescription
+> = {
   id: number;
-  definition: INodeDefinition | NodeDefinition;
-  inputValues?: {
-    [key: string]: NodeValue;
-  };
-  inputFlows?: {
-    [key: string]: {
-      fromNodeId: number;
-      fromSocketId: string;
-    };
-  };
+  definition: INodeDefinition<TInput, TOutput, TConfig>;
+  inputValues?: TInputValues<TInput>;
+  inputFlows?: TInputFlows<TInput>;
 };
 
 const toValueJson = (value: string | bigint | boolean): ValueJSON => {
@@ -115,3 +125,60 @@ export const toGraphJson = (nodes: ConfiguredNode[]): GraphJSON => {
 
   return result;
 };
+
+export const configuredNodeFactory = () => {
+  const autoCounter = autoIdIncrementer();
+
+  const create = <
+    TInput extends SocketsDefinition,
+    TOutput extends SocketsDefinition,
+    TConfig extends NodeConfigurationDescription
+  >({
+    definition,
+    inputFlows,
+    inputValues
+  }: {
+    definition: INodeDefinition<TInput, TOutput, TConfig> | NodeDefinition;
+    inputValues?: TInputValues<TInput>;
+    inputFlows?: TInputFlows<TInput>;
+  }): ConfiguredNode<TInput, TOutput, TConfig> => {
+    return {
+      id: autoCounter.next(),
+      // @ts-ignore
+      definition: definition,
+      inputValues,
+      inputFlows
+    };
+  };
+
+  return { create };
+};
+
+export const inputFlowFrom = <TOutput extends SocketsDefinition>(
+  {
+    id
+  }: {
+    id: number;
+    definition: {
+      out?: TOutput;
+    };
+  },
+  fromSocketId: SocketNames<TOutput>
+) => ({
+  fromNodeId: id,
+  fromSocketId
+});
+
+export const inputValueLinkFrom = <TOutput extends SocketsDefinition>(
+  {
+    id
+  }: {
+    id: number;
+    definition: {
+      out?: TOutput;
+    };
+  },
+  fromSocketId: SocketNames<TOutput>
+) => ({
+  link: { nodeId: id, socketId: fromSocketId }
+});
