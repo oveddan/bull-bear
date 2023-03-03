@@ -123,7 +123,6 @@ function makeSmartContractFunctionNodeDefinitions({
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       init: ({ read, configuration, write, commit }) => {
-        console.log('init!!');
         if (!contractAddress) {
           console.error('no contract address');
           return;
@@ -131,17 +130,16 @@ function makeSmartContractFunctionNodeDefinitions({
 
         const pollInterval = configuration.pollInterval || defaultPollInterval;
 
-        console.log(pollInterval);
         const poll = async () => {
           const inputs = generateInputArgs(x.inputs, read);
 
-          console.log({ inputs, contractAddress, name: x.name });
+          // console.log({ inputs, contractAddress, name: x.name });
           const result = await readContract({
             chainId,
             abi,
             address: contractAddress,
-            functionName: x.name
-            // args: inputs
+            functionName: x.name,
+            args: inputs
           });
 
           // for now assume result is 1 value
@@ -153,7 +151,7 @@ function makeSmartContractFunctionNodeDefinitions({
           write('0', toBigInt);
           commit('flow');
 
-          console.log({ result, toBigInt });
+          // console.log({ result, toBigInt });
           pollTimeout = window.setTimeout(() => {
             // sort alphabetically by input key
             poll();
@@ -173,12 +171,9 @@ function makeSmartContractFunctionNodeDefinitions({
       category: NodeCategory.Flow,
       in: toExecuteTransactionInputs(x.inputs, x.stateMutability === 'payable'),
       out: {
-        transactionStarted: {
-          valueType: 'flow'
-        },
-        transactionCompleted: {
-          valueType: 'flow'
-        }
+        started: 'flow',
+        succeeded: 'flow',
+        failed: 'flow'
       },
       initialState: undefined,
       triggered: ({ read, commit, graph }) => {
@@ -204,16 +199,19 @@ function makeSmartContractFunctionNodeDefinitions({
           });
 
           try {
+            commit('started');
             const { hash, wait } = await writeContract({
               ...config,
               abi
             });
-            console.log({ hash, wait });
-            console.log('waiting');
+            // console.log({ hash, wait });
+            // console.log('waiting');
             await wait();
+            commit('succeeded');
             console.log('done');
           } catch (error) {
             console.error(error);
+            commit('failed');
           }
         })();
       }

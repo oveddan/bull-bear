@@ -6,7 +6,6 @@ import { goerli, sepolia } from 'wagmi/chains';
 const chains = [goerli, sepolia];
 export const ConnectButton3d = () => {
   const x = useContext(Context);
-  console.log({ x });
   return (
     <Billboard
       follow={true}
