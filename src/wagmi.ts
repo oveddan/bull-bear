@@ -30,8 +30,8 @@ const scrollAlphaChain: Chain = {
 
 const getAllowedChains = () =>
   import.meta.env.MODE === 'development'
-    ? [foundry, goerli /*, scrollAlphaChain*/]
-    : [goerli /*, scrollAlphaChain*/];
+    ? [foundry, goerli, scrollAlphaChain]
+    : [goerli, scrollAlphaChain];
 
 const getUrl = (chainId: number) => {
   if (chainId == foundry.id) return `http://127.0.0.1:8545`;
