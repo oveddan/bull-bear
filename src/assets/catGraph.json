@@ -1,15 +1,58 @@
 {
   "nodes": [
     {
+      "id": "dc0cd6e7-750d-4722-814a-c48a2ab5ec35",
+      "type": "scene/set/boolean",
+      "metadata": {
+        "positionX": "1604.2472231410486",
+        "positionY": "-247.04845704476816"
+      },
+      "parameters": {
+        "jsonPath": {
+          "value": "nodes/26/visible"
+        },
+        "value": {
+          "link": {
+            "nodeId": "c09cc3bd-b9b0-42ed-bcc6-829093ebf0cf",
+            "socket": "result"
+          }
+        }
+      }
+    },
+    {
+      "id": "c09cc3bd-b9b0-42ed-bcc6-829093ebf0cf",
+      "type": "math/greaterThan/integer",
+      "metadata": {
+        "positionX": "418.5338372930774",
+        "positionY": "-203.65128028963287"
+      },
+      "parameters": {
+        "a": {
+          "link": {
+            "nodeId": "071f3eeb-f980-4640-8f75-135839ce6386",
+            "socket": "0"
+          }
+        }
+      }
+    },
+    {
+      "id": "1c66edc7-e3cd-441d-bd35-b262e7cd3d79",
+      "type": "smartContract/bullBear/pet",
+      "metadata": {
+        "positionX": "900.9291446987676",
+        "positionY": "447.58238470804855"
+      }
+    },
+    {
       "id": "b32f8dad-655b-47a9-b386-eb8c8486a4ea",
       "type": "math/lessThan/integer",
       "metadata": {
-        "positionX": "592.0482888912712",
-        "positionY": "-39.48699134932689"
+        "positionX": "428.37845245005497",
+        "positionY": "0.13833747328335733"
       },
       "parameters": {
         "b": {
-          "value": "30"
+          "value": "51"
         },
         "a": {
           "link": {
@@ -23,8 +66,8 @@
       "id": "c728a912-eb8e-4d37-8609-e3316cbc686c",
       "type": "scene/set/boolean",
       "metadata": {
-        "positionX": "841.8331051290628",
-        "positionY": "38.47008852933055"
+        "positionX": "910.567072417306",
+        "positionY": "9.638609680105802"
       },
       "parameters": {
         "jsonPath": {
@@ -36,73 +79,20 @@
             "socket": "result"
           }
         }
-      }
-    },
-    {
-      "id": "5a2ea537-2186-44b6-957a-44d0c4cdd729",
-      "type": "math/greaterThan/integer",
-      "metadata": {
-        "positionX": "994.5964625575876",
-        "positionY": "-360.93328812524294"
       },
-      "parameters": {
-        "a": {
-          "link": {
-            "nodeId": "9697d336-36a7-49dc-9d63-f0026803cdd4",
-            "socket": "0"
-          }
+      "flows": {
+        "flow": {
+          "nodeId": "dc0cd6e7-750d-4722-814a-c48a2ab5ec35",
+          "socket": "flow"
         }
-      }
-    },
-    {
-      "id": "9697d336-36a7-49dc-9d63-f0026803cdd4",
-      "type": "smartContract/bullBearFood/balanceOf",
-      "metadata": {
-        "positionX": "533.835395301549",
-        "positionY": "-277.9745179943097"
-      },
-      "parameters": {
-        "id": {
-          "value": "1"
-        },
-        "account": {
-          "link": {
-            "nodeId": "45ff14f7-3158-4283-95e8-8201ef64d2e5",
-            "socket": "address"
-          }
-        }
-      }
-    },
-    {
-      "id": "acb835fa-1c98-40a3-bf68-98f1ba58337e",
-      "type": "smartContract/bullBear/safeMint",
-      "metadata": {
-        "positionX": "660.3460646441724",
-        "positionY": "411.62486180308946"
-      },
-      "parameters": {
-        "to": {
-          "link": {
-            "nodeId": "45ff14f7-3158-4283-95e8-8201ef64d2e5",
-            "socket": "address"
-          }
-        }
-      }
-    },
-    {
-      "id": "45ff14f7-3158-4283-95e8-8201ef64d2e5",
-      "type": "currentAddress",
-      "metadata": {
-        "positionX": "138.61141834889577",
-        "positionY": "359.8282890435835"
       }
     },
     {
       "id": "ad61e3f7-2f37-4d46-915a-010cc6e3b496",
       "type": "scene/nodeClick",
       "metadata": {
-        "positionX": "188.40114611422797",
-        "positionY": "476.5392186269109"
+        "positionX": "152.22149805880122",
+        "positionY": "500.65898399719543"
       },
       "parameters": {
         "jsonPath": {
@@ -111,7 +101,7 @@
       },
       "flows": {
         "flow": {
-          "nodeId": "acb835fa-1c98-40a3-bf68-98f1ba58337e",
+          "nodeId": "1c66edc7-e3cd-441d-bd35-b262e7cd3d79",
           "socket": "flow"
         }
       }
@@ -120,8 +110,8 @@
       "id": "071f3eeb-f980-4640-8f75-135839ce6386",
       "type": "smartContract/bullBear/getHappiness",
       "metadata": {
-        "positionX": "41.85828069869919",
-        "positionY": "74.71056536072533"
+        "positionX": "7.401473026864181",
+        "positionY": "78.15624612790882"
       },
       "parameters": {
         "tokenId": {

@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 import { useChainId } from 'wagmi';
 import {
   bullBearABI,
-  bullBearFoodABI,
+  bullBearTokenABI,
   useBullBear,
-  useBullBearBullBearFood
+  useBullBearBullBearToken
 } from '../generated';
 import {
   makeSmartContractNodeDefinitions,
@@ -15,11 +15,13 @@ import {
 export const makeAllContractDefinitions = ({
   chainId,
   bullBearAddress,
-  bullBearFoodAddress
+  // bullBearFoodAddress
+  bullBearTokenAddress
 }: {
   chainId: number;
   bullBearAddress: `0x${string}`;
-  bullBearFoodAddress: `0x${string}`;
+  bullBearTokenAddress: `0x${string}`;
+  // bullBearFoodAddress: `0x${string}`;
 }): Record<string, NodeDefinition> => ({
   ...makeSmartContractNodeDefinitions({
     chainId,
@@ -29,9 +31,9 @@ export const makeAllContractDefinitions = ({
   }),
   ...makeSmartContractNodeDefinitions({
     chainId,
-    abi: bullBearFoodABI,
-    contractName: 'bullBearFood',
-    contractAddress: bullBearFoodAddress
+    abi: bullBearTokenABI,
+    contractName: 'bullBearToken',
+    contractAddress: bullBearTokenAddress
   })
 });
 
@@ -39,26 +41,26 @@ export const useGameContractNodeDefinitions = ():
   | Record<string, NodeDefinition>
   | undefined => {
   const bullBearContract = useBullBear();
-  const { data: bullBearFoodAddress } = useBullBearBullBearFood();
+  const { data: bullBearTokenAddress } = useBullBearBullBearToken();
   const bullBearContractAddress = bullBearContract?.address;
   const chainId = useChainId();
 
   const currentAddressDefinition = useCurrentAddressNodeDefinition();
 
   return useMemo(() => {
-    if (!bullBearContractAddress || !bullBearFoodAddress) return;
+    if (!bullBearContractAddress || !bullBearTokenAddress) return;
     const result: Record<string, NodeDefinition> = {
       ...currentAddressDefinition,
       ...makeAllContractDefinitions({
         chainId,
         bullBearAddress: bullBearContractAddress,
-        bullBearFoodAddress
+        bullBearTokenAddress
       })
     };
     return result;
   }, [
     bullBearContractAddress,
-    bullBearFoodAddress,
+    bullBearTokenAddress,
     chainId,
     currentAddressDefinition
   ]);

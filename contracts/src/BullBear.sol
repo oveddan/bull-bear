@@ -29,7 +29,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   Counters.Counter private _tokenIdCounter;
 
   BullBearToken public immutable bullBearToken;
-  BullBearFood public immutable bullBearFood;
+  // BullBearFood public immutable bullBearFood;
 
   mapping(uint256 => LastHappiness) private lastHappiness;
   mapping(uint256 => uint256) private lastPetTime;
@@ -39,7 +39,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   constructor(string memory _initialBaseUri) ERC721('BullBear', 'BBTK') {
     baseURI = _initialBaseUri;
     bullBearToken = new BullBearToken();
-    bullBearFood = new BullBearFood();
+    // bullBearFood = new BullBearFood();
   }
 
   function safeMint(address to) public returns (uint256) {
@@ -49,7 +49,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
     lastHappiness[tokenId] = LastHappiness(block.timestamp, INITIAL_HAPPINESS);
 
     _safeMint(to, tokenId);
-    bullBearFood.mint(to, INITIAL_FOOD);
+    // bullBearFood.mint(to, INITIAL_FOOD);
 
     return tokenId;
   }

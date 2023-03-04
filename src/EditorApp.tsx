@@ -22,7 +22,7 @@ export function EditorApp() {
       </div>
 
       <EditableScene
-        modelUrl={'/combined-v2-with-food.glb'}
+        modelUrl={'/combined-v2.glb'}
         initialGraphJson={catGraph as unknown as GraphJSON}
         additionalNodeDefinitions={gameSmartContractDefinitions}
       />

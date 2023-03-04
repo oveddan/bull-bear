@@ -160,10 +160,10 @@ contract BullBearTest is Test {
     bullBear.pet(tokenId);
   }
 
-  function test_mintsFoodToMinter() public {
-    address minter = vm.addr(3);
-    vm.prank(owner);
-    bullBear.safeMint(minter);
-    assertEq(bullBear.bullBearFood().totalBalance(minter), 3);
-  }
+  // function test_mintsFoodToMinter() public {
+  //   address minter = vm.addr(3);
+  //   vm.prank(owner);
+  //   bullBear.safeMint(minter);
+  //   assertEq(bullBear.bullBearFood().totalBalance(minter), 3);
+  // }
 }
