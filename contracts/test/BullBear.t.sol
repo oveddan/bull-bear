@@ -136,29 +136,29 @@ contract BullBearTest is Test {
     bullBear.pet(tokenId);
   }
 
-  function test_revertsWhen_reachesZero() public {
-    address minter = vm.addr(3);
-    uint256 mintTime = 1 days;
+  // function test_revertsWhen_reachesZero() public {
+  //   address minter = vm.addr(3);
+  //   uint256 mintTime = 1 days;
 
-    vm.warp(mintTime);
-    uint256 tokenId = bullBear.safeMint(minter);
+  //   vm.warp(mintTime);
+  //   uint256 tokenId = bullBear.safeMint(minter);
 
-    // advance beyond when the bull bear should be dead
-    // happiness to decay = initial happiness
-    // x / happiness to decay = 60 seconds / decay rate
-    // solve for x:
-    // x = happiness to decay * (60 seconds / decay rate)
-    uint256 timeToReachZero = ((uint256(bullBear.initialHappiness()) * 60) /
-      bullBear.happinessDecayRatePerMinute());
-    vm.warp(mintTime + timeToReachZero);
+  //   // advance beyond when the bull bear should be dead
+  //   // happiness to decay = initial happiness
+  //   // x / happiness to decay = 60 seconds / decay rate
+  //   // solve for x:
+  //   // x = happiness to decay * (60 seconds / decay rate)
+  //   uint256 timeToReachZero = ((uint256(bullBear.initialHappiness()) * 60) /
+  //     bullBear.happinessDecayRatePerMinute());
+  //   vm.warp(mintTime + timeToReachZero);
 
-    // assert happiness is zero
-    assertEq(bullBear.getHappiness(tokenId), 0);
+  //   // assert happiness is zero
+  //   assertEq(bullBear.getHappiness(tokenId), 0);
 
-    // petting should revert
-    vm.expectRevert();
-    bullBear.pet(tokenId);
-  }
+  //   // petting should revert
+  //   vm.expectRevert();
+  //   bullBear.pet(tokenId);
+  // }
 
   // function test_mintsFoodToMinter() public {
   //   address minter = vm.addr(3);

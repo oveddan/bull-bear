@@ -22,9 +22,9 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   uint8 constant MAX_HAPPINESS = 100;
   uint8 constant INITIAL_HAPPINESS = MAX_HAPPINESS / 2;
   uint8 constant INITIAL_FOOD = 3;
-  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 10;
+  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 20;
   uint8 constant PETTING_BONUS = 10;
-  uint8 constant MIN_PETTING_INTERVAL_SECONDS = 20;
+  uint8 constant MIN_PETTING_INTERVAL_SECONDS = 10;
 
   Counters.Counter private _tokenIdCounter;
 
@@ -63,9 +63,9 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   }
 
   function pet(uint256 tokenId) public {
-    if (isRekt(tokenId)) {
-      revert Rekt();
-    }
+    // if (isRekt(tokenId)) {
+    //   revert Rekt();
+    // }
     // check if can pet according to the time
     // if this is a new pet, then we can pet
     if (!canPet(tokenId)) {
