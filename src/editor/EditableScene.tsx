@@ -28,7 +28,7 @@ import { SceneInner } from '../components/SceneInner';
 export type EditableSceneProps = {
   modelUrl: string;
   initialGraphJson: GraphJSON;
-  additionalNodeDefinitions: Record<string, NodeDefinition>;
+  additionalNodeDefinitions: Record<string, NodeDefinition> | undefined;
 };
 
 export function EditableSceneInner({

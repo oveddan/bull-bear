@@ -1,3 +1,4 @@
+import { NodeDefinition } from '@oveddan-behave-graph/core';
 import { useMemo } from 'react';
 import { useChainId } from 'wagmi';
 import {
@@ -16,10 +17,10 @@ export const makeAllContractDefinitions = ({
   bullBearAddress,
   bullBearFoodAddress
 }: {
-  chainId: number | undefined;
-  bullBearAddress: `0x${string}` | undefined;
-  bullBearFoodAddress: `0x${string}` | undefined;
-}) => ({
+  chainId: number;
+  bullBearAddress: `0x${string}`;
+  bullBearFoodAddress: `0x${string}`;
+}): Record<string, NodeDefinition> => ({
   ...makeSmartContractNodeDefinitions({
     chainId,
     abi: bullBearABI,
@@ -34,7 +35,9 @@ export const makeAllContractDefinitions = ({
   })
 });
 
-export const useGameContractNodeDefinitions = () => {
+export const useGameContractNodeDefinitions = ():
+  | Record<string, NodeDefinition>
+  | undefined => {
   const bullBearContract = useBullBear();
   const { data: bullBearFoodAddress } = useBullBearBullBearFood();
   const bullBearContractAddress = bullBearContract?.address;
@@ -42,20 +45,21 @@ export const useGameContractNodeDefinitions = () => {
 
   const currentAddressDefinition = useCurrentAddressNodeDefinition();
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    if (!bullBearContractAddress || !bullBearFoodAddress) return;
+    const result: Record<string, NodeDefinition> = {
       ...currentAddressDefinition,
       ...makeAllContractDefinitions({
         chainId,
         bullBearAddress: bullBearContractAddress,
         bullBearFoodAddress
       })
-    }),
-    [
-      bullBearContractAddress,
-      bullBearFoodAddress,
-      chainId,
-      currentAddressDefinition
-    ]
-  );
+    };
+    return result;
+  }, [
+    bullBearContractAddress,
+    bullBearFoodAddress,
+    chainId,
+    currentAddressDefinition
+  ]);
 };
