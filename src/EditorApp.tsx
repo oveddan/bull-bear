@@ -5,7 +5,7 @@ import { EditableScene } from './editor/EditableScene';
 // import catModel from './assets/combined-v2.glb';
 import catGraph from './assets/catGraph.json';
 import { useGameContractNodeDefinitions } from './hooks/useGameContractNodeDefinitions';
-import { Connect } from './components';
+import { Connect } from './components/Connect';
 import { GraphJSON } from '@oveddan-behave-graph/core';
 
 export function EditorApp() {

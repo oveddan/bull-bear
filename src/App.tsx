@@ -5,7 +5,7 @@ import './app.css';
 import catGraph from './assets/catGraph.json';
 //
 // import { WagmiConnect as RainbowKitConnect } from './components/Connect';
-import { RainbowKitConnect } from './components/Connect';
+import { Connect } from './components/Connect';
 import { GraphJSON } from '@oveddan-behave-graph/core';
 
 export function App() {
@@ -15,7 +15,7 @@ export function App() {
     <>
       {/* <h1>wagmi + Vite</h1> */}
 
-      <RainbowKitConnect />
+      <Connect />
 
       <NonEditableScene
         modelUrl={'combined-v2.glb'}

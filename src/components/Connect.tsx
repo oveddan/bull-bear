@@ -40,3 +40,5 @@ export function WagmiConnect() {
     </div>
   );
 }
+
+export const Connect = RainbowKitConnect;
