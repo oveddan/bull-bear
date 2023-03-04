@@ -1,8 +1,9 @@
-import { IScene, OnClickListeners } from '@oveddan-behave-graph/scene';
+import { IScene } from '@oveddan-behave-graph/scene';
 import { ObjectMap } from '@react-three/fiber';
 import { useCallback, useEffect, useState } from 'react';
 import { GLTF } from 'three-stdlib';
-import { buildScene } from './buildScene';
+import { buildScene, OnClickListeners } from './buildScene';
+import { useWhyDidYouUpdate } from 'use-why-did-you-update';
 
 export type AnimationsState = { [key: string]: boolean };
 
@@ -32,10 +33,27 @@ export const useScene = (gltf: (GLTF & ObjectMap) | undefined) => {
     []
   );
 
+  useWhyDidYouUpdate('useScene', {
+    gltf,
+    sceneOnClickListeners,
+    setAnimationActive,
+    activeAnimations
+  });
+
   useEffect(() => {
     if (!gltf) {
       setScene(undefined);
     } else {
+      const setAnimationActive = (animation: string, active: boolean) => {
+        setActiveAnimations((existing) => {
+          if (!!existing[animation] === active) return existing;
+
+          return {
+            ...existing,
+            [animation]: active
+          };
+        });
+      };
       setScene(
         buildScene({
           gltf,
@@ -44,7 +62,7 @@ export const useScene = (gltf: (GLTF & ObjectMap) | undefined) => {
         })
       );
     }
-  }, [gltf, setSceneOnClickListeners, setAnimationActive]);
+  }, [gltf]);
 
   return {
     scene,

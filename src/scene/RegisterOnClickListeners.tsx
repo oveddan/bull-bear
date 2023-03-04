@@ -1,9 +1,9 @@
-import { OnClickListener, OnClickListeners } from '@oveddan-behave-graph/scene';
 import { GLTF } from 'three-stdlib';
 import { ObjectMap } from '@react-three/fiber';
 import { useCallback, useEffect, useState } from 'react';
-import { Mesh, Object3D } from 'three';
+import { Mesh } from 'three';
 import { useCursor } from '@react-three/drei';
+import { OnClickListener, OnClickListeners } from './buildScene';
 
 const RegisterOnClickListenersOnElements = ({
   jsonPath,

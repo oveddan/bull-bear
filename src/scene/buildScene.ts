@@ -1,5 +1,6 @@
 import { Choices, EventEmitter } from '@oveddan-behave-graph/core';
 import { IScene, Vec3, Vec4 } from '@oveddan-behave-graph/scene';
+import { Dispatch, SetStateAction } from 'react';
 import {
   Event,
   Material,
@@ -160,6 +161,7 @@ const getPropertyFromModel = (
 function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
   switch (property) {
     case 'visible': {
+      console.log('setting visible', value);
       objectRef.visible = value as boolean;
       break;
     }
@@ -385,9 +387,8 @@ export const buildScene = ({
   setActiveAnimations
 }: {
   gltf: GLTF & ObjectMap;
-  setOnClickListeners:
-    | ((cb: (existing: OnClickListeners) => OnClickListeners) => void)
-    | undefined;
+  setOnClickListeners: Dispatch<SetStateAction<OnClickListeners>>;
+
   setActiveAnimations:
     | ((animation: string, active: boolean) => void)
     | undefined;

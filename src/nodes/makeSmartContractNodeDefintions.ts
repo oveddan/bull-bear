@@ -156,10 +156,15 @@ function makeSmartContractFunctionNodeDefinitions({
 
           // for now assume result is 1 value
           let toBigInt: bigint;
-          if (typeof result === 'number') {
-            toBigInt = BigInt(result);
-          } else {
-            toBigInt = (result as BigNumber).toBigInt();
+          try {
+            if (typeof result === 'number') {
+              toBigInt = BigInt(result);
+            } else {
+              toBigInt = (result as BigNumber).toBigInt();
+            }
+          } catch (e) {
+            console.error(e);
+            return;
           }
 
           console.log('got result', { toBigInt });

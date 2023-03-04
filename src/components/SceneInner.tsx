@@ -1,25 +1,21 @@
-import { OnClickListeners } from '@oveddan-behave-graph/scene';
 import {
-  Backdrop,
   Center,
   Environment,
   Lightformer,
   OrbitControls,
-  RandomizedLight,
-  Reflector,
   SpotLight,
-  Stage,
   useContextBridge
 } from '@react-three/drei';
-import { Canvas, ObjectMap, useLoader } from '@react-three/fiber';
+import { Canvas, ObjectMap } from '@react-three/fiber';
 import { useState } from 'react';
 import { Object3D } from 'three';
-import { GLTF, RGBELoader } from 'three-stdlib';
+import { GLTF } from 'three-stdlib';
 import { AnimationsState } from '../scene/useScene';
 import { Context as WagmiContext } from 'wagmi';
 import { RegisterOnClickListeners } from '../scene/RegisterOnClickListeners';
 import ToggleAnimations from '../scene/ToggleAnimations';
 import { Floor } from './Elements/Floor';
+import { OnClickListeners } from '../scene/buildScene';
 
 export const SceneInner = ({
   onClickListeners,

@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useAnimations } from '@react-three/drei';
-import { ACESFilmicToneMapping, AnimationAction } from 'three';
+import { AnimationAction } from 'three';
 import { ObjectMap } from '@react-three/fiber';
 import { GLTF } from 'three-stdlib';
 import { AnimationsState } from './useScene';
-import { faRub } from '@fortawesome/free-solid-svg-icons';
 
 type AnimationActions = {
   [key: string]: AnimationAction | null;
 };
 
-const PlayAnimation = ({ name, actions, playing }: { name: string; actions: AnimationActions; playing: boolean }) => {
+const PlayAnimation = ({
+  name,
+  actions,
+  playing
+}: {
+  name: string;
+  actions: AnimationActions;
+  playing: boolean;
+}) => {
   const [action] = useState(actions[name]);
 
   useEffect(() => {
@@ -57,13 +64,27 @@ const PlayAnimation = ({ name, actions, playing }: { name: string; actions: Anim
   return null;
 };
 
-const ToggleAnimations = ({ gltf, animationsState }: { gltf: GLTF & ObjectMap; animationsState: AnimationsState }) => {
-  const { actions: animationActions } = useAnimations(gltf.animations, gltf.scene);
+const ToggleAnimations = ({
+  gltf,
+  animationsState
+}: {
+  gltf: GLTF & ObjectMap;
+  animationsState: AnimationsState;
+}) => {
+  const { actions: animationActions } = useAnimations(
+    gltf.animations,
+    gltf.scene
+  );
 
   return (
     <>
       {Object.entries(animationsState).map(([name, playing]) => (
-        <PlayAnimation key={name} playing={playing} name={name} actions={animationActions} />
+        <PlayAnimation
+          key={name}
+          playing={playing}
+          name={name}
+          actions={animationActions}
+        />
       ))}
     </>
   );
