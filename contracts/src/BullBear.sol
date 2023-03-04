@@ -9,42 +9,75 @@ import '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 
+struct LastHappiness {
+  uint256 time;
+  uint8 happiness;
+}
+
+error TooSoonToPet(uint256 minPetTime);
+error Rekt();
+
 contract BullBear is ERC721, ERC721URIStorage, Ownable {
   using Counters for Counters.Counter;
   uint8 constant MAX_HAPPINESS = 100;
-  uint constant INITIAL_FOOD = 3;
+  uint8 constant INITIAL_HAPPINESS = MAX_HAPPINESS / 2;
+  uint8 constant INITIAL_FOOD = 3;
+  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 50;
+  uint8 constant PETTING_BONUS = 10;
+  uint8 constant MIN_PETTING_INTERVAL_SECONDS = 20;
 
   Counters.Counter private _tokenIdCounter;
 
   BullBearToken public immutable bullBearToken;
   BullBearFood public immutable bullBearFood;
 
-  mapping(uint256 => uint8) public happiness;
-
-  uint256 public immutable maxSupply;
+  mapping(uint256 => LastHappiness) private lastHappiness;
+  mapping(uint256 => uint256) private lastPetTime;
 
   string public baseURI;
 
-  constructor(
-    uint256 _maxSupply,
-    string memory _initialBaseUri
-  ) ERC721('BullBear', 'BBTK') {
-    maxSupply = _maxSupply;
+  constructor(string memory _initialBaseUri) ERC721('BullBear', 'BBTK') {
     baseURI = _initialBaseUri;
     bullBearToken = new BullBearToken();
     bullBearFood = new BullBearFood();
   }
 
-  function safeMint(address to) public onlyOwner {
+  function safeMint(address to) public returns (uint256) {
     uint256 tokenId = _tokenIdCounter.current();
-    if (tokenId >= maxSupply) {
-      revert('Max supply reached');
-    }
+
     _tokenIdCounter.increment();
-    happiness[tokenId] = MAX_HAPPINESS / 2;
+    lastHappiness[tokenId] = LastHappiness(block.timestamp, INITIAL_HAPPINESS);
 
     _safeMint(to, tokenId);
     bullBearFood.mint(to, INITIAL_FOOD);
+
+    return tokenId;
+  }
+
+  function canPet(uint256 tokenId) public view returns (bool) {
+    if (lastPetTime[tokenId] == 0) return true;
+
+    uint256 elapsed = block.timestamp - lastPetTime[tokenId];
+
+    return elapsed >= MIN_PETTING_INTERVAL_SECONDS;
+  }
+
+  function pet(uint256 tokenId) public {
+    if (isRekt(tokenId)) {
+      revert Rekt();
+    }
+    // check if can pet according to the time
+    // if this is a new pet, then we can pet
+    if (!canPet(tokenId)) {
+      revert TooSoonToPet({minPetTime: MIN_PETTING_INTERVAL_SECONDS});
+    }
+
+    lastPetTime[tokenId] = block.timestamp;
+    _increaseHappiness(tokenId, PETTING_BONUS);
+  }
+
+  function isRekt(uint256 tokenId) public view returns (bool) {
+    return getHappiness(tokenId) == 0;
   }
 
   // The following functions are overrides required by Solidity.
@@ -69,7 +102,46 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   }
 
   function getHappiness(uint256 tokenId) public view returns (uint8) {
-    return happiness[tokenId];
+    LastHappiness storage _lastHappiness = lastHappiness[tokenId];
+    uint256 elapsed = block.timestamp - _lastHappiness.time;
+    uint256 decay = (HAPPINESS_DECAY_RATE_PER_MINUTE * elapsed) / 60;
+
+    if (decay >= _lastHappiness.happiness) {
+      return 0;
+    }
+
+    return _lastHappiness.happiness - uint8(decay);
+  }
+
+  function pettingBonus() external pure returns (uint8) {
+    return PETTING_BONUS;
+  }
+
+  function initialHappiness() external pure returns (uint8) {
+    return INITIAL_HAPPINESS;
+  }
+
+  function happinessDecayRatePerMinute() external pure returns (uint8) {
+    return HAPPINESS_DECAY_RATE_PER_MINUTE;
+  }
+
+  function minPettingIntervalSeconds() external pure returns (uint8) {
+    return MIN_PETTING_INTERVAL_SECONDS;
+  }
+
+  function _increaseHappiness(uint256 tokenId, uint8 amount) private {
+    lastHappiness[tokenId] = LastHappiness(
+      block.timestamp,
+      _min(getHappiness(tokenId) + amount, MAX_HAPPINESS)
+    );
+  }
+
+  function _min(uint8 a, uint8 b) private pure returns (uint8) {
+    if (a < b) {
+      return a;
+    }
+
+    return b;
   }
 }
 
