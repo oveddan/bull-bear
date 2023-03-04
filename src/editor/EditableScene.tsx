@@ -38,10 +38,6 @@ export function EditableSceneInner({
 }: EditableSceneProps) {
   const gltf = useGLTF(modelUrl) as GLTF & ObjectMap;
 
-  useEffect(() => {
-    console.log('init');
-  }, []);
-
   const {
     nodeDefinitions: coreNodeDefinitions,
     valuesDefinitions: coreValueDefinitions,

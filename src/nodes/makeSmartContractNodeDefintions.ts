@@ -130,7 +130,6 @@ function makeSmartContractFunctionNodeDefinitions({
         const pollInterval = configuration.pollInterval || defaultPollInterval;
 
         const poll = async () => {
-          console.log('reading');
           if (!contractAddress) {
             console.error('no contract address for node');
             return;

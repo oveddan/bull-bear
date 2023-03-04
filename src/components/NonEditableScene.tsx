@@ -26,6 +26,8 @@ export const NonEditableScene = ({
 }) => {
   const gltf = useGLTF(modelUrl) as GLTF & ObjectMap;
 
+  console.log({ graphJson });
+
   // todo: combine the below into a single hook
   const {
     nodeDefinitions: coreNodeDefinitions,
