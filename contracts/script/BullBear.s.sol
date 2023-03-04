@@ -13,7 +13,7 @@ contract Deploy is Script {
 
     vm.startBroadcast(deployerPrivateKey);
 
-    BullBear bullBear = new BullBear(5, 'ipfs.io://ipfs');
+    BullBear bullBear = new BullBear('ipfs.io://ipfs');
     bullBearAddress = address(bullBear);
 
     bullBear.safeMint(minter);
