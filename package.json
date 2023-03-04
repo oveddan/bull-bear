@@ -9,7 +9,7 @@
     "dev": "npm run wagmi && vite",
     "vite-dev": "vite",
     "dev:foundry": "npm run dev & wagmi generate --watch & npm run anvil",
-    "build": "npm run wagmi && tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "wagmi": "wagmi generate"
   },
