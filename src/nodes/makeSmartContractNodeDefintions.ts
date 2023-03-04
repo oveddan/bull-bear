@@ -77,8 +77,8 @@ function makeSmartContractFunctionNodeDefinitions({
 }: {
   abi: Abi;
   name: string;
-  chainId: number | undefined;
-  contractAddress: `0x${string}` | undefined;
+  chainId: number;
+  contractAddress: `0x${string}`;
 }) {
   const functions = abi.filter(
     (x) => x.type === 'function'
@@ -260,8 +260,8 @@ export function makeSmartContractNodeDefinitions<
 }: {
   abi: TAbi;
   contractName: string;
-  chainId: number | undefined;
-  contractAddress: `0x${string}` | undefined;
+  chainId: number;
+  contractAddress: `0x${string}`;
 }): Record<string, NodeDefinition> {
   // const contractName = abi.e
 
@@ -281,7 +281,7 @@ export const useCurrentAddressNodeDefinition = () => {
   const currentAddress = useAccount().address;
 
   return useMemo(() => {
-    if (!currentAddress) return {};
+    if (!currentAddress) return undefined;
 
     return {
       currentAddress: makeEventNodeDefinition({
@@ -296,7 +296,9 @@ export const useCurrentAddressNodeDefinition = () => {
         init: ({ write }) => {
           write('address', currentAddress);
         },
-        dispose: () => {}
+        dispose: () => {
+          return;
+        }
       })
     };
   }, [currentAddress]);
