@@ -63,7 +63,7 @@ contract BullBearTest is Test {
     uint256 tokenId = bullBear.safeMint(minter);
 
     // decays 50 happiness per 60 seconds;
-    uint256 decayRate = 50;
+    uint256 decayRate = bullBear.happinessDecayRatePerMinute();
     uint256 decayInterval = 60;
 
     uint256 timeSinceStart = 27 seconds;
