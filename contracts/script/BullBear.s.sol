@@ -5,10 +5,14 @@ import 'forge-std/Script.sol';
 
 import '../src/BullBear.sol';
 
-contract Deploy is Script {
-  function run() external returns (address bullBearAddress) {
-    uint256 deployerPrivateKey = vm.envUint('DEPLOYER_PRIVATE_KEY');
+contract DeployBase is Script {
+  uint256 deployerPrivateKey;
 
+  constructor(uint256 _deployerPrivateKey) {
+    deployerPrivateKey = _deployerPrivateKey;
+  }
+
+  function run() external returns (address bullBearAddress) {
     address minter = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
 
     vm.startBroadcast(deployerPrivateKey);
@@ -22,4 +26,12 @@ contract Deploy is Script {
 
     vm.stopBroadcast();
   }
+}
+
+contract DeployAnvil is DeployBase {
+  constructor() DeployBase(vm.envUint('DEPLOYER_PRIVATE_KEY')) {}
+}
+
+contract DeployScroll is DeployBase {
+  constructor() DeployBase(vm.envUint('SCROLL_DEPLOYER_PRIVATE_KEY')) {}
 }

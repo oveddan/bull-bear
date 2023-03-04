@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "anvil": "source .env && anvil --fork-url $ANVIL_FORK_URL --chain-id $ANVIL_CHAIN_ID",
-    "deploy:scroll": "source .env && forge script contracts/script/BullBear.s.sol:Deploy --rpc-url https://alpha-rpc.scroll.io/l2 --broadcast -vv",
+    "deploy:scroll": "source .env && forge script contracts/script/BullBear.s.sol:DeployScroll --rpc-url https://alpha-rpc.scroll.io/l2 --legacy --broadcast -vv",
     "deploy:goerli": "source .env && forge script contracts/script/BullBear.s.sol:Deploy --rpc-url https://endpoints.omniatech.io/v1/eth/goerli/public --broadcast -vvvv",
-    "deploy:anvil": "source .env.local && forge script contracts/script/BullBear.s.sol:Deploy --fork-url http://localhost:8545 --broadcast",
+    "deploy:anvil": "source .env.local && forge script contracts/script/BullBear.s.sol:DeployAnvil --fork-url http://localhost:8545 --broadcast",
     "dev": "npm run wagmi && vite",
     "vite-dev": "vite",
     "dev:foundry": "npm run dev & wagmi generate --watch & npm run anvil",
