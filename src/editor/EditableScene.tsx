@@ -24,12 +24,15 @@ import { GraphJSON, NodeDefinition } from '@oveddan-behave-graph/core';
 import { useScene } from '../scene/useScene';
 import { useSceneRegistry } from '../hooks/useSceneRegistry';
 import { SceneInner } from '../components/SceneInner';
+import { BigNumber } from 'ethers';
 
 export type EditableSceneProps = {
   modelUrl: string;
   initialGraphJson: GraphJSON;
   additionalNodeDefinitions: Record<string, NodeDefinition> | undefined;
 };
+
+const defaultTokenId = BigNumber.from(0);
 
 export function EditableSceneInner({
   modelUrl,
@@ -160,6 +163,7 @@ export function EditableSceneInner({
       gltf={gltf}
       onClickListeners={sceneOnClickListeners}
       animations={animations}
+      tokenId={defaultTokenId}
     />
   );
 
