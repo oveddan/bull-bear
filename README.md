@@ -8,6 +8,16 @@ It was build for Eth Denver 2023
 
 In essence, it is an extension of the [behave-graph](https://github.com/bhouston/behave-graph) - allowing behave graph nodes to be generated off of a smart contract's abi, and allow a 3d model to write to and read from any evm compatible blockchain in an interoperable format that can be imported into open game platofrms.
 
+## Tech Stack
+
+- [Foundry](https://book.getfoundry.sh/) - Smart contract development and deployment framework.
+- Contracts deployed to the optimistic [Base](https://docs.base.org/) and the zk [Scroll](https://scroll.io/) rollups.
+- `react` and `tailwind`, and [vite](https://vitejs.dev/) for the serverless dapp
+- [react-three-fiber](https://docs.pmnd.rs/react-three-fiber) and [@react-three/drei](https://github.com/pmndrs/drei) - used to load 3d models and render and interact with the 3d scene.
+- [wagmi](https://wagmi.sh) - Used to generating type-safe ABIs & React Hooks from the Foundry smart contracts, and connect to them with minimal configuration from react.
+- [behave-graph](https://github.com/bhouston/behave-graph) - Used to build and run the behave graph nodes.
+- dapp deployed on IPFS to [fleek.co](https://fleek.co/), and 3d model and behave graph assets stores on ipfs using [web3.storage](https://web3.storage/)
+
 ## Useful code snippets:
 
 [src/nodes/makeSmartContractNodeDefintions.ts](./src/nodes/makeSmartContractNodeDefintions.ts) - This file contains the code that generates behave graph node's from a smart contract's abi.
@@ -17,6 +27,8 @@ In essence, it is an extension of the [behave-graph](https://github.com/bhouston
 - For each event, it generates `event` nodes that emit whenever the event is fired.
 
 [src/hooks/useGameContractNodeDefinitions.ts](./src/hooks/useGameContractNodeDefinitions.ts) - This file contains the code that generates the behave graph nodes from the [BullBear.sol](./contracts/src/BullBear.sol) abis.
+
+[src/web3/customChains.ts](./src/web3/customChains.ts) - Configuration for wagmi and rainwbowkit to connect to the [Base](https://docs.base.org/) and [Scroll](https://scroll.io/) rollups.
 
 [src/assets/catGraph.json](./src/assets/catGraph.json) - This is an example of a behave graph that has been created using the nodes generated from the abi of the [BullBear.sol](./contracts/src/BullBear.sol) smart contract.
 
