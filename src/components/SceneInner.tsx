@@ -1,9 +1,4 @@
-import {
-  Center,
-  Environment,
-  Lightformer,
-  useContextBridge
-} from '@react-three/drei';
+import { Environment, Lightformer, useContextBridge } from '@react-three/drei';
 import { Canvas, ObjectMap } from '@react-three/fiber';
 import { useState } from 'react';
 import { Object3D } from 'three';
@@ -15,6 +10,7 @@ import ToggleAnimations from '../scene/ToggleAnimations';
 import { OnClickListeners } from '../scene/buildScene';
 import { Background } from './Elements/Background';
 import { HappinessIndicator } from './Elements/HappinessIndicator';
+import { Effects } from './Elements/Effects';
 
 export const SceneInner = ({
   onClickListeners,
@@ -32,16 +28,16 @@ export const SceneInner = ({
     <Canvas className="bg-black">
       <ContextBridge>
         {/* <OrbitControls makeDefault target={mainRef?.position} /> */}
+        <Effects />
         <Environment background={true}>
           <Lightformer
             form="rect" // circle | ring | rect (optional, default = rect)
-            intensity={0.5} // power level (optional = 1)
+            intensity={0.2} // power level (optional = 1)
             color="white" // (optional = white)
             // scale={[10, 5]} // Scale it any way you prefer (optional = [1, 1])
             target={[0, 0, 0]} // Target position (optional = undefined)
           />
         </Environment>
-        <directionalLight />
         {/* <Center> */}
         {/* <Backdrop
             floor={0.25} // Stretches the floor segment, 0.25 by default

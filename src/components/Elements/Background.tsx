@@ -4,6 +4,7 @@ export const Background = () => {
   const backgroundImage = useTexture('/background.JPG');
 
   return (
+    // @ts-ignore
     <Backdrop
       floor={0.25} // Stretches the floor segment, 0.25 by default
       segments={20} // Mesh-resolution, 20 by default
