@@ -9,7 +9,7 @@
       },
       "parameters": {
         "jsonPath": {
-          "value": "materials/0/emissiveIntensity"
+          "value": "materials/0/opacity"
         },
         "value": {
           "link": {
@@ -160,7 +160,7 @@
       },
       "parameters": {
         "jsonPath": {
-          "value": "animations/1/playing"
+          "value": "animations/2/playing"
         },
         "value": {
           "link": {

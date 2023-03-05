@@ -1,5 +1,5 @@
 import { configureChains, createClient } from 'wagmi';
-import { foundry, goerli } from 'wagmi/chains';
+import { foundry } from 'wagmi/chains';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';

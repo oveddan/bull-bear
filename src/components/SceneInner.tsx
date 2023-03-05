@@ -2,10 +2,7 @@ import {
   Center,
   Environment,
   Lightformer,
-  ScreenSpace,
-  SpotLight,
-  useContextBridge,
-  useGLTF
+  useContextBridge
 } from '@react-three/drei';
 import { Canvas, ObjectMap } from '@react-three/fiber';
 import { useState } from 'react';

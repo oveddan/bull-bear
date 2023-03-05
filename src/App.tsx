@@ -18,7 +18,7 @@ export function App() {
       <Connect />
 
       <NonEditableScene
-        modelUrl={'combined-v2.glb'}
+        modelUrl={'/combined-v3.glb'}
         graphJson={catGraph as unknown as GraphJSON}
       />
     </>
