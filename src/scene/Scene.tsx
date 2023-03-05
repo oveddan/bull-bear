@@ -5,13 +5,13 @@ import { Mesh, Object3D } from 'three';
 import { GLTF } from 'three-stdlib';
 import ToggleAnimations from './ToggleAnimations';
 import { AnimationsState } from './useScene';
-import { OnClickListener, OnClickListeners } from '@oveddan-behave-graph/scene'
+import { OnClickListener, OnClickListeners } from '@oveddan-behave-graph/scene';
 
 const RegisterOnClickListenersOnElements = ({
   jsonPath,
   listeners,
   gltf,
-  setHovered,
+  setHovered
 }: {
   jsonPath: string;
   listeners: OnClickListener;
@@ -52,7 +52,10 @@ type SceneProps = {
   animationsState: AnimationsState;
 };
 
-const RegisterOnClickListeners = ({ onClickListeners, gltf }: Pick<SceneProps, 'onClickListeners' | 'gltf'>) => {
+const RegisterOnClickListeners = ({
+  onClickListeners,
+  gltf
+}: Pick<SceneProps, 'onClickListeners' | 'gltf'>) => {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered, 'pointer', 'auto');
 
@@ -73,7 +76,11 @@ const RegisterOnClickListeners = ({ onClickListeners, gltf }: Pick<SceneProps, '
   );
 };
 
-export const Scene = ({ gltf, onClickListeners, animationsState }: SceneProps) => {
+export const Scene = ({
+  gltf,
+  onClickListeners,
+  animationsState
+}: SceneProps) => {
   const [mainRef, setMainRef] = useState<Object3D | null>(null);
 
   return (
@@ -82,9 +89,18 @@ export const Scene = ({ gltf, onClickListeners, animationsState }: SceneProps) =
 
       {gltf && (
         <>
-          <Stage shadows adjustCamera={false} intensity={1} environment="city" preset="rembrandt">
+          <Stage
+            shadows
+            adjustCamera={false}
+            intensity={1}
+            environment="city"
+            preset="rembrandt"
+          >
             <primitive object={gltf.scene} ref={setMainRef}>
-              <RegisterOnClickListeners gltf={gltf} onClickListeners={onClickListeners} />
+              <RegisterOnClickListeners
+                gltf={gltf}
+                onClickListeners={onClickListeners}
+              />
             </primitive>
           </Stage>
           <ToggleAnimations gltf={gltf} animationsState={animationsState} />

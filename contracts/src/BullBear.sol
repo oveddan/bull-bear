@@ -17,14 +17,19 @@ struct LastHappiness {
 error TooSoonToPet(uint256 minPetTime);
 error Rekt();
 
+struct Urls {
+  string modelUrl;
+  string behaveGraphUrl;
+}
+
 contract BullBear is ERC721, ERC721URIStorage, Ownable {
   using Counters for Counters.Counter;
   uint8 constant MAX_HAPPINESS = 100;
   uint8 constant INITIAL_HAPPINESS = MAX_HAPPINESS / 2;
   uint8 constant INITIAL_FOOD = 3;
-  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 20;
-  uint8 constant PETTING_BONUS = 10;
-  uint8 constant MIN_PETTING_INTERVAL_SECONDS = 10;
+  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 50;
+  uint8 constant PETTING_BONUS = 20;
+  uint8 constant MIN_PETTING_INTERVAL_SECONDS = 5;
 
   Counters.Counter private _tokenIdCounter;
 
@@ -37,10 +42,18 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   mapping(uint256 => uint256) private lastPetTime;
 
   string public baseURI;
+  string public modelURI;
+  string public behaveGraphURI;
 
-  constructor(string memory _initialBaseUri) ERC721('BullBear', 'BBTK') {
+  constructor(
+    string memory _initialBaseUri,
+    string memory _modelUrl,
+    string memory _initialBehaveGraphURI
+  ) ERC721('BullBear', 'BBTK') {
     baseURI = _initialBaseUri;
     bullBearToken = new BullBearToken();
+    modelURI = _modelUrl;
+    behaveGraphURI = _initialBehaveGraphURI;
     // bullBearFood = new BullBearFood();
   }
 

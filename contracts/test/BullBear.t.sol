@@ -15,7 +15,7 @@ contract BullBearTest is Test {
     // maxSupply = 5;
     initialBaseUrl = 'ipfs://01231';
     vm.prank(owner);
-    bullBear = new BullBear(/*maxSupply, */ initialBaseUrl);
+    bullBear = new BullBear(initialBaseUrl, '', '');
   }
 
   function test_canMintUnlimited(uint8 quantity) public {

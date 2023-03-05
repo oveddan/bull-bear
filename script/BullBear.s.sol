@@ -17,7 +17,11 @@ abstract contract Deploy is Script {
 
     vm.startBroadcast(deployerPrivateKey);
 
-    BullBear bullBear = new BullBear('ipfs.io://ipfs');
+    BullBear bullBear = new BullBear(
+      'ipfs.io://ipfs/',
+      'bafybeialdke2npmramdqmdqlpm2pjhbzgyqlmmzgsvgizinhjmgst2ydvi/combined-v3.glb',
+      'bafybeifzshubfigm6fzwvnriz5r7nbrklrxccfhg46trcrz7ief7r6ltpu/catGraph.json'
+    );
     bullBearAddress = address(bullBear);
 
     bullBear.safeMint(minter);

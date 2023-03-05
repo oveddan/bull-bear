@@ -2,3 +2,6 @@ fantasy_landscape_hdr.jpg filter=lfs diff=lfs merge=lfs -text
 cloud.glb filter=lfs diff=lfs merge=lfs -text
 background.JPG filter=lfs diff=lfs merge=lfs -text
 combined-v3.glb filter=lfs diff=lfs merge=lfs -text
+happy_cloud.PNG filter=lfs diff=lfs merge=lfs -text
+mul_token.PNG filter=lfs diff=lfs merge=lfs -text
+my_mul.PNG filter=lfs diff=lfs merge=lfs -text

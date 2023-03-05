@@ -17,7 +17,11 @@ import { SceneInner } from './SceneInner';
 import { useGameContractNodeDefinitions } from '../hooks/useGameContractNodeDefinitions';
 import { GraphJSON } from '@oveddan-behave-graph/core';
 import { useEffect } from 'react';
+import { BigNumber } from 'ethers';
 // import { useWhyDidYouUpdate } from 'use-why-did-you-update';
+
+const defaultTokenId = BigNumber.from(0);
+
 export const NonEditableScene = ({
   modelUrl,
   graphJson
@@ -82,6 +86,7 @@ export const NonEditableScene = ({
       gltf={gltf}
       animations={animations}
       onClickListeners={onClickListeners}
+      tokenId={defaultTokenId}
     />
   );
 };

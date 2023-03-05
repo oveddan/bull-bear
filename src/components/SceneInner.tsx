@@ -9,17 +9,20 @@ import { RegisterOnClickListeners } from '../scene/RegisterOnClickListeners';
 import ToggleAnimations from '../scene/ToggleAnimations';
 import { OnClickListeners } from '../scene/buildScene';
 import { Background } from './Elements/Background';
-import { HappinessIndicator } from './Elements/HappinessIndicator';
 import { Effects } from './Elements/Effects';
+import { UI } from './UI';
+import { BigNumber } from 'ethers';
 
 export const SceneInner = ({
   onClickListeners,
   gltf,
-  animations
+  animations,
+  tokenId
 }: {
   onClickListeners: OnClickListeners;
   gltf: GLTF & ObjectMap;
   animations: AnimationsState;
+  tokenId: BigNumber;
 }) => {
   // const [mainRef, setMainRef] = useState<Object3D | null>(null);
   const [mainRef, setMainRef] = useState<Object3D | null>(null);
@@ -49,10 +52,12 @@ export const SceneInner = ({
         <Background />
         {/* <Center position-z={1} position-y={0} position-x={0.7}> */}
         <group position-y={-1.5}>
-          <group position-y={3} position-x={2.5} rotation-y={Math.PI / 2}>
+          {/* <group position-y={3} position-x={2.5} rotation-y={Math.PI / 2}>
             <HappinessIndicator happiness={0.7} />
-          </group>
+          </group> */}
           <primitive object={gltf.scene} ref={setMainRef}></primitive>
+
+          <UI tokenId={tokenId} />
         </group>
         <RegisterOnClickListeners
           gltf={gltf}
