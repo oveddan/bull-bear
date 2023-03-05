@@ -117,31 +117,6 @@
       }
     },
     {
-      "id": "dc0cd6e7-750d-4722-814a-c48a2ab5ec35",
-      "type": "scene/set/boolean",
-      "metadata": {
-        "positionX": "1298.2472231410486",
-        "positionY": "-281.04845704476816"
-      },
-      "parameters": {
-        "jsonPath": {
-          "value": "nodes/26/visible"
-        },
-        "value": {
-          "link": {
-            "nodeId": "c09cc3bd-b9b0-42ed-bcc6-829093ebf0cf",
-            "socket": "result"
-          }
-        }
-      },
-      "flows": {
-        "flow": {
-          "nodeId": "9a1790cc-dd09-4edd-a4f2-c538271449e1",
-          "socket": "flow"
-        }
-      }
-    },
-    {
       "id": "c09cc3bd-b9b0-42ed-bcc6-829093ebf0cf",
       "type": "math/greaterThan/integer",
       "metadata": {
@@ -196,7 +171,7 @@
       },
       "flows": {
         "flow": {
-          "nodeId": "dc0cd6e7-750d-4722-814a-c48a2ab5ec35",
+          "nodeId": "9a1790cc-dd09-4edd-a4f2-c538271449e1",
           "socket": "flow"
         }
       }

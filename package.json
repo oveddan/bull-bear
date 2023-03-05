@@ -21,6 +21,7 @@
     "@oveddan-behave-graph/flow": "^1.0.1",
     "@oveddan-behave-graph/scene": "^1.0.0",
     "@rainbow-me/rainbowkit": "^0.11.0",
+    "@react-three/csg": "^2.0.7",
     "@react-three/drei": "^9.57.0",
     "@react-three/fiber": "^8.11.5",
     "@types/three": "^0.149.0",

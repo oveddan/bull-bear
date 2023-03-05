@@ -2,6 +2,7 @@ import {
   Center,
   Environment,
   Lightformer,
+  ScreenSpace,
   SpotLight,
   useContextBridge,
   useGLTF
@@ -16,6 +17,7 @@ import { RegisterOnClickListeners } from '../scene/RegisterOnClickListeners';
 import ToggleAnimations from '../scene/ToggleAnimations';
 import { OnClickListeners } from '../scene/buildScene';
 import { Background } from './Elements/Background';
+import { HappinessIndicator } from './Elements/HappinessIndicator';
 
 export const SceneInner = ({
   onClickListeners,
@@ -28,7 +30,6 @@ export const SceneInner = ({
 }) => {
   // const [mainRef, setMainRef] = useState<Object3D | null>(null);
   const [mainRef, setMainRef] = useState<Object3D | null>(null);
-  const cloud = useGLTF('/cloud-b.glb');
   const ContextBridge = useContextBridge(WagmiContext);
   return (
     <Canvas className="bg-black">
@@ -53,13 +54,10 @@ export const SceneInner = ({
             <meshStandardMaterial color="#353540" />
           </Backdrop> */}
         <Background />
-        <Center position-z={0} position-y={0.5} position-x={0.7}>
-          <primitive
-            object={cloud.scene}
-            position-y={3}
-            position-x={2.5}
-            rotation-y={Math.PI / 2}
-          />
+        <Center position-z={1} position-y={0} position-x={0.7}>
+          <group position-y={3} position-x={2.5} rotation-y={Math.PI / 2}>
+            <HappinessIndicator happiness={0.7} />
+          </group>
           <primitive object={gltf.scene} ref={setMainRef}>
             <RegisterOnClickListeners
               gltf={gltf}
