@@ -1,18 +1,11 @@
 // import { Canvas } from '@react-three/fiber';
-import { EditableScene } from './editor/EditableScene';
 // import './app.css';
 
 // import catModel from './assets/combined-v2.glb';
-import catGraph from './assets/catGraph.json';
-import { useGameContractNodeDefinitions } from './hooks/useGameContractNodeDefinitions';
 import { Connect } from './components/Connect';
-import { GraphJSON } from '@oveddan-behave-graph/core';
+import { EdibleSceneWithFilesFromToken } from './editor/EditableScene';
 
 export function EditorApp() {
-  // const { isConnected } = useAccount();
-
-  const gameSmartContractDefinitions = useGameContractNodeDefinitions();
-
   return (
     <>
       {/* <h1>wagmi + Vite</h1> */}
@@ -21,11 +14,7 @@ export function EditorApp() {
         <Connect />
       </div>
 
-      <EditableScene
-        modelUrl={'/combined-v3.glb'}
-        initialGraphJson={catGraph as unknown as GraphJSON}
-        additionalNodeDefinitions={gameSmartContractDefinitions}
-      />
+      <EdibleSceneWithFilesFromToken />
     </>
   );
 }

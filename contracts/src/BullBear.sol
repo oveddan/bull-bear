@@ -70,6 +70,10 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
     return tokenId;
   }
 
+  function setBehaveGraphURI(string memory _behaveGraphURI) external onlyOwner {
+    behaveGraphURI = _behaveGraphURI;
+  }
+
   function canPet(uint256 tokenId) public view returns (bool) {
     if (lastPetTime[tokenId] == 0) return true;
 

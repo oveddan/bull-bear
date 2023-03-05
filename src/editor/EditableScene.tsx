@@ -26,11 +26,14 @@ import { useSceneRegistry } from '../hooks/useSceneRegistry';
 import { SceneInner } from '../components/SceneInner';
 import { BigNumber } from 'ethers';
 import { useModelAndGraphFromToken } from '../hooks/useModelAndGraphFromToken';
+import { UpdateBehaveGraph } from './UpdateBehaveGraph';
+import { useGameContractNodeDefinitions } from '../hooks/useGameContractNodeDefinitions';
 
 export type EditableSceneProps = {
   modelUrl: string;
   initialGraphJson: GraphJSON;
   additionalNodeDefinitions: Record<string, NodeDefinition> | undefined;
+  tokenId: BigNumber;
 };
 
 const defaultTokenId = BigNumber.from(0);
@@ -38,7 +41,8 @@ const defaultTokenId = BigNumber.from(0);
 export function EditableSceneInner({
   modelUrl,
   initialGraphJson,
-  additionalNodeDefinitions
+  additionalNodeDefinitions,
+  tokenId
 }: EditableSceneProps) {
   const gltf = useGLTF(modelUrl) as GLTF & ObjectMap;
 
@@ -140,6 +144,13 @@ export function EditableSceneInner({
           graphJson={graphJson}
           running={playing}
           setBehaviorGraph={setGraphJson}
+          additionalControls={
+            <UpdateBehaveGraph
+              nodes={nodes}
+              edges={edges}
+              nodeSpecJSON={specJson}
+            />
+          }
         />
       )}
       <Background
@@ -164,7 +175,7 @@ export function EditableSceneInner({
       gltf={gltf}
       onClickListeners={sceneOnClickListeners}
       animations={animations}
-      tokenId={defaultTokenId}
+      tokenId={tokenId}
     />
   );
 
@@ -191,12 +202,15 @@ export function EditableScene(props: EditableSceneProps) {
 export const EdibleSceneWithFilesFromToken = () => {
   const result = useModelAndGraphFromToken();
 
-  if (!result) return null;
+  const gameContractNodeDefinitions = useGameContractNodeDefinitions();
+
+  if (!result.graphJson) return null;
   return (
     <EditableScene
       modelUrl={result.modelUrl}
       initialGraphJson={result.graphJson}
-      additionalNodeDefinitions={{}}
+      additionalNodeDefinitions={gameContractNodeDefinitions}
+      tokenId={defaultTokenId}
     />
   );
 };
