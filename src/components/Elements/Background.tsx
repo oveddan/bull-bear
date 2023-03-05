@@ -1,7 +1,8 @@
 import { Backdrop, useTexture } from '@react-three/drei';
+import background from './images/background.jpg';
 
 export const Background = () => {
-  const backgroundImage = useTexture('/background.JPG');
+  const backgroundImage = useTexture(background);
 
   return (
     // @ts-ignore
@@ -16,13 +17,5 @@ export const Background = () => {
     >
       <meshBasicMaterial map={backgroundImage} />
     </Backdrop>
-    // <mesh position-z={-5}>
-    //   <meshStandardMaterial
-    //     map={backgroundImage}
-    //     emissiveIntensity={100}
-    //     emissiveMap={backgroundImage}
-    //   />
-    //   <planeGeometry args={[100, 100]} />
-    // </mesh>
   );
 };

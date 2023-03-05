@@ -3,9 +3,10 @@ import { BigNumber } from 'ethers';
 import { useEffect, useState } from 'react';
 import { DoubleSide } from 'three';
 import { useBullBearGetHappiness } from '../generated';
+import happyCloud from './Elements/images/happy_cloud.png';
 
 export const UI = ({ tokenId }: { tokenId: BigNumber }) => {
-  const cloud = useTexture('/happy_cloud.PNG');
+  const cloud = useTexture(happyCloud);
 
   const { data: happiness } = useBullBearGetHappiness({
     args: [tokenId],
