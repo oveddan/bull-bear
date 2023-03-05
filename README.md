@@ -34,7 +34,7 @@ In essence, it is an extension of the [behave-graph](https://github.com/bhouston
 
 [src/editor/UpdateBehaveGraph.tsx](./src/editor/UpdateBehaveGraph.tsx) - This file contains the code that saves the curerntly edited behave graph to ipfs, then writes that ipfs hash address to the smart contract, if the connected account is the smart contract owner.
 
-[contracts/src/BullBear.sol](./contracts/src/BullBear.sol) - This is the smart contract that is used in the example behave graph. It has a dynamic happiness value that is computed based on a decay and last time the creature was petted. It also stores the ipfs hash of both the 3d model and behave graph. The behave graph ipfs hash can be updated by the contract owner
+[contracts/src/BullBear.sol](./contracts/src/BullBear.sol) - This is the smart contract that is used in the example behave graph. It has a dynamic happiness value that is computed based on a decay and last time the creature was petted. It also stores the ipfs hash of both the 3d model and behave graph. The behave graph ipfs hash can be updated by the contract owner. Eventually it would be able to mint erc20 tokens to the owner of the creature.
 
 [src/components/SceneInner.tsx](src/components/SceneInner.tsx) - This contains the code to render the 3d scene, toggle animations on and off and apply updates to the scene from the graph.
 
