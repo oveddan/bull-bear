@@ -64,7 +64,6 @@ const RegisterOnClickListenersOnElements = ({
   }, [listeners.callbacks, jsonPath]);
 
   const hoveredOn = useCallback(() => {
-    console.log('pointer over');
     setHovered((prev) => ({ ...prev, [jsonPath]: true }));
   }, [jsonPath]);
 
@@ -101,7 +100,7 @@ export const RegisterOnClickListeners = ({
   const [anyHovered, setAnyHovered] = useState(false);
 
   useEffect(() => {
-    const anyTrue = Object.values(hovered).some((x) => !!x);
+    const anyTrue = Object.values(hovered).some((x) => x);
     setAnyHovered(anyTrue);
   }, [hovered]);
 

@@ -161,7 +161,6 @@ const getPropertyFromModel = (
 function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
   switch (property) {
     case 'visible': {
-      console.log('setting visible', value);
       objectRef.visible = value as boolean;
       break;
     }
@@ -176,7 +175,6 @@ function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
       break;
     }
     case 'rotation': {
-      console.log('setting rotation', value);
       const v = value as Vec4;
       objectRef.quaternion.set(v.x, v.y, v.z, v.w);
       objectRef.matrixWorldNeedsUpdate = true;

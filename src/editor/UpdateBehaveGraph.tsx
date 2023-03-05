@@ -86,8 +86,6 @@ const UpdateBehaveGraphInner = ({
         const graphJson = flowToBehave(nodes, edges, nodeSpecJSON);
         const ipfsPath = await saveToWebIPFS(graphJson);
 
-        console.log('saving', ipfsPath);
-
         const prepared = await prepareWriteContract({
           abi: bullBearABI,
           address: contractAddress,
@@ -96,13 +94,9 @@ const UpdateBehaveGraphInner = ({
           args: [ipfsPath]
         });
 
-        console.log('writing');
         const tx = await writeContract(prepared);
 
-        console.log('wrote it');
-
         await tx.wait();
-        console.log('completed');
       } catch (e) {
         console.error(e);
       } finally {

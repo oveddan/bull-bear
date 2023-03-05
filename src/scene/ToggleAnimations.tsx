@@ -34,7 +34,6 @@ const PlayAnimation = ({
         setHasPlayed(true);
       } else {
         if (action.paused) {
-          console.log('unpausing');
           action.paused = false;
         }
       }

@@ -1,8 +1,3 @@
-// import { Canvas } from '@react-three/fiber';
-// import './app.css';
-
-// import catModel from './assets/combined-v2.glb';
-import { useAccount } from 'wagmi';
 import { Connect } from './components/Connect';
 import { EdibleSceneWithFilesFromToken } from './editor/EditableScene';
 

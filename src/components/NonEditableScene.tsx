@@ -16,7 +16,6 @@ import { createSceneDependency } from '@oveddan-behave-graph/scene';
 import { SceneInner } from './SceneInner';
 import { useGameContractNodeDefinitions } from '../hooks/useGameContractNodeDefinitions';
 import { GraphJSON } from '@oveddan-behave-graph/core';
-import { useEffect } from 'react';
 import { BigNumber } from 'ethers';
 import { useModelAndGraphFromToken } from '../hooks/useModelAndGraphFromToken';
 // import { useWhyDidYouUpdate } from 'use-why-did-you-update';
@@ -32,11 +31,6 @@ export const NonEditableScene = ({
 }) => {
   const gltf = useGLTF(modelUrl) as GLTF & ObjectMap;
 
-  useEffect(() => {
-    console.log('loaded');
-  }, []);
-
-  // todo: combine the below into a single hook
   const {
     nodeDefinitions: coreNodeDefinitions,
     valuesDefinitions: coreValueDefinitions,
