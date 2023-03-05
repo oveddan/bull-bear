@@ -1,8 +1,7 @@
 import { defineConfig } from '@wagmi/cli';
 import { foundry, react } from '@wagmi/cli/plugins';
 import * as chains from 'wagmi/chains';
-
-const scrollAlphaChainId = 534353;
+import { scrollAlphaChainId } from './src/web3/customChains';
 
 export default defineConfig({
   out: 'src/generated.ts',

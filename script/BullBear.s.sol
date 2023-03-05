@@ -3,9 +3,9 @@ pragma solidity ^0.8.9;
 
 import 'forge-std/Script.sol';
 
-import '../src/BullBear.sol';
+import '../contracts/src/BullBear.sol';
 
-contract DeployBase is Script {
+abstract contract Deploy is Script {
   uint256 deployerPrivateKey;
 
   constructor(uint256 _deployerPrivateKey) {
@@ -28,10 +28,14 @@ contract DeployBase is Script {
   }
 }
 
-contract DeployAnvil is DeployBase {
-  constructor() DeployBase(vm.envUint('DEPLOYER_PRIVATE_KEY')) {}
+contract DeployAnvil is Deploy {
+  constructor() Deploy(vm.envUint('DEPLOYER_PRIVATE_KEY')) {}
 }
 
-contract DeployScroll is DeployBase {
-  constructor() DeployBase(vm.envUint('SCROLL_DEPLOYER_PRIVATE_KEY')) {}
+contract DeployScroll is Deploy {
+  constructor() Deploy(vm.envUint('SCROLL_DEPLOYER_PRIVATE_KEY')) {}
+}
+
+contract DeployBase is Deploy {
+  constructor() Deploy(vm.envUint('BASE_DEPLOYER_PRIVATE_KEY')) {}
 }

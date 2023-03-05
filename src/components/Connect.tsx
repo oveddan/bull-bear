@@ -1,6 +1,6 @@
 import { ConnectButton, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { chains } from '../wagmi';
+import { chains } from '../web3/wagmi';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 export function RainbowKitConnect() {

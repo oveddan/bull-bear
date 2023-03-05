@@ -1,32 +1,12 @@
-import { Chain, configureChains, createClient } from 'wagmi';
-import { foundry, goerli, mainnet } from 'wagmi/chains';
+import { configureChains, createClient } from 'wagmi';
+import { foundry, goerli } from 'wagmi/chains';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { publicProvider } from 'wagmi/providers/public';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-
-const scrollAlphaChainId = 534353;
-
-const scrollAlphaChain: Chain = {
-  id: scrollAlphaChainId,
-  name: 'Scroll Alpha',
-  // @ts-ignore
-  rpcUrls: {
-    default: {
-      http: ['https://alpha-rpc.scroll.io/l2']
-    }
-  },
-  blockExplorers: {
-    default: {
-      name: 'Blockscout',
-      url: 'https://blockscout.scroll.io'
-    }
-  },
-  network: 'scroll',
-  nativeCurrency: mainnet.nativeCurrency
-};
+import { scrollAlphaChain, scrollAlphaChainId } from './customChains';
 
 const getAllowedChains = () =>
   import.meta.env.MODE === 'development'

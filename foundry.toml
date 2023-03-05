@@ -11,4 +11,5 @@ scroll='https://alpha-rpc.scroll.io/l2'
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
 
 [etherscan]
-scroll= { key = "${ETHERSCAN_API_KEY}" }
+534353= { key = "${ETHERSCAN_API_KEY}" }
+84531= { key = "${ETHERSCAN_API_KEY}" }
