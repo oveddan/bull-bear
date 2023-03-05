@@ -18,6 +18,7 @@ error TooSoonToPet(uint256 minPetTime);
 error Rekt();
 
 struct Urls {
+  string baseUrl;
   string modelUrl;
   string behaveGraphUrl;
 }
@@ -27,7 +28,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   uint8 constant MAX_HAPPINESS = 100;
   uint8 constant INITIAL_HAPPINESS = MAX_HAPPINESS / 2;
   uint8 constant INITIAL_FOOD = 3;
-  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 50;
+  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 30;
   uint8 constant PETTING_BONUS = 20;
   uint8 constant MIN_PETTING_INTERVAL_SECONDS = 5;
 
@@ -143,6 +144,10 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
 
   function minPettingIntervalSeconds() external pure returns (uint8) {
     return MIN_PETTING_INTERVAL_SECONDS;
+  }
+
+  function modelAndGraphUrls() external view returns (Urls memory) {
+    return Urls(baseURI, modelURI, behaveGraphURI);
   }
 
   function _increaseHappiness(uint256 tokenId, uint8 amount) private {

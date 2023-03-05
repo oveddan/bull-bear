@@ -18,6 +18,7 @@ import { useGameContractNodeDefinitions } from '../hooks/useGameContractNodeDefi
 import { GraphJSON } from '@oveddan-behave-graph/core';
 import { useEffect } from 'react';
 import { BigNumber } from 'ethers';
+import { useModelAndGraphFromToken } from '../hooks/useModelAndGraphFromToken';
 // import { useWhyDidYouUpdate } from 'use-why-did-you-update';
 
 const defaultTokenId = BigNumber.from(0);
@@ -88,5 +89,15 @@ export const NonEditableScene = ({
       onClickListeners={onClickListeners}
       tokenId={defaultTokenId}
     />
+  );
+};
+
+export const NonEditableSceneWithFilesFromToken = () => {
+  const result = useModelAndGraphFromToken();
+
+  if (!result) return null;
+
+  return (
+    <NonEditableScene modelUrl={result.modelUrl} graphJson={result.graphJson} />
   );
 };

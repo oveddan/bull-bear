@@ -25,6 +25,7 @@ import { useScene } from '../scene/useScene';
 import { useSceneRegistry } from '../hooks/useSceneRegistry';
 import { SceneInner } from '../components/SceneInner';
 import { BigNumber } from 'ethers';
+import { useModelAndGraphFromToken } from '../hooks/useModelAndGraphFromToken';
 
 export type EditableSceneProps = {
   modelUrl: string;
@@ -186,3 +187,16 @@ export function EditableScene(props: EditableSceneProps) {
     </Suspense>
   );
 }
+
+export const EdibleSceneWithFilesFromToken = () => {
+  const result = useModelAndGraphFromToken();
+
+  if (!result) return null;
+  return (
+    <EditableScene
+      modelUrl={result.modelUrl}
+      initialGraphJson={result.graphJson}
+      additionalNodeDefinitions={{}}
+    />
+  );
+};
