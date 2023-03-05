@@ -8,6 +8,8 @@ It was build for Eth Denver 2023
 
 In essence, it is an extension of the [behave-graph](https://github.com/bhouston/behave-graph) - allowing behave graph nodes to be generated off of a smart contract's abi, and allow a 3d model to write to and read from any evm compatible blockchain in an interoperable format that can be imported into open game platofrms.
 
+![screenshot of My Mul](readmeAssets/screenshot.png)
+
 ## Tech Stack
 
 - [Foundry](https://book.getfoundry.sh/) - Smart contract development and deployment framework.
