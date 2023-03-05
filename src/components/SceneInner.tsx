@@ -51,18 +51,19 @@ export const SceneInner = ({
             <meshStandardMaterial color="#353540" />
           </Backdrop> */}
         <Background />
-        <Center position-z={1} position-y={0} position-x={0.7}>
+        {/* <Center position-z={1} position-y={0} position-x={0.7}> */}
+        <group position-y={-1.5}>
           <group position-y={3} position-x={2.5} rotation-y={Math.PI / 2}>
             <HappinessIndicator happiness={0.7} />
           </group>
-          <primitive object={gltf.scene} ref={setMainRef}>
-            <RegisterOnClickListeners
-              gltf={gltf}
-              onClickListeners={onClickListeners}
-            />
-          </primitive>
-          {/* <Floor /> */}
-        </Center>
+          <primitive object={gltf.scene} ref={setMainRef}></primitive>
+        </group>
+        <RegisterOnClickListeners
+          gltf={gltf}
+          onClickListeners={onClickListeners}
+        />
+        {/* <Floor /> */}
+        {/* </Center> */}
         {/* </Center> */}
         <ToggleAnimations gltf={gltf} animationsState={animations} />
         {/* </Stage> */}

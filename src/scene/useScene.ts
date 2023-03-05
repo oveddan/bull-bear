@@ -1,11 +1,15 @@
 import { IScene } from '@oveddan-behave-graph/scene';
 import { ObjectMap } from '@react-three/fiber';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GLTF } from 'three-stdlib';
 import { buildScene, OnClickListeners } from './buildScene';
-import { useWhyDidYouUpdate } from 'use-why-did-you-update';
 
-export type AnimationsState = { [key: string]: boolean };
+export type AnimationsState = {
+  [key: string]: {
+    playing: boolean;
+    loop: boolean;
+  };
+};
 
 export const useScene = (gltf: (GLTF & ObjectMap) | undefined) => {
   const [scene, setScene] = useState<IScene>();
@@ -19,38 +23,20 @@ export const useScene = (gltf: (GLTF & ObjectMap) | undefined) => {
     setActiveAnimations({});
   }, [gltf]);
 
-  const setAnimationActive = useCallback(
-    (animation: string, active: boolean) => {
-      setActiveAnimations((existing) => {
-        if (!!existing[animation] === active) return existing;
-
-        return {
-          ...existing,
-          [animation]: active
-        };
-      });
-    },
-    []
-  );
-
-  useWhyDidYouUpdate('useScene', {
-    gltf,
-    sceneOnClickListeners,
-    setAnimationActive,
-    activeAnimations
-  });
-
   useEffect(() => {
     if (!gltf) {
       setScene(undefined);
     } else {
       const setAnimationActive = (animation: string, active: boolean) => {
         setActiveAnimations((existing) => {
-          if (!!existing[animation] === active) return existing;
+          if (!!existing[animation]?.playing === active) return existing;
 
           return {
             ...existing,
-            [animation]: active
+            [animation]: {
+              ...existing[animation],
+              playing: active
+            }
           };
         });
       };

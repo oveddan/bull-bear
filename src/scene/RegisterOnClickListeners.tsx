@@ -1,8 +1,14 @@
 import { GLTF } from 'three-stdlib';
 import { ObjectMap } from '@react-three/fiber';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 import { Mesh } from 'three';
-import { useCursor } from '@react-three/drei';
+import { meshBounds, useCursor } from '@react-three/drei';
 import { OnClickListener, OnClickListeners } from './buildScene';
 
 const RegisterOnClickListenersOnElements = ({
@@ -14,7 +20,7 @@ const RegisterOnClickListenersOnElements = ({
   jsonPath: string;
   listeners: OnClickListener;
   gltf: GLTF & ObjectMap;
-  setHovered: (hovered: boolean) => void;
+  setHovered: Dispatch<SetStateAction<HoveredState>>;
 }) => {
   const [node, setNode] = useState<Mesh>();
 
@@ -26,6 +32,7 @@ const RegisterOnClickListenersOnElements = ({
         return;
       }
       const node = nodeSource.clone() as Mesh;
+      node.visible = false;
 
       setNode(node);
       return;
@@ -56,16 +63,30 @@ const RegisterOnClickListenersOnElements = ({
     listeners.callbacks.forEach((cb) => cb(jsonPath));
   }, [listeners.callbacks, jsonPath]);
 
+  const hoveredOn = useCallback(() => {
+    console.log('pointer over');
+    setHovered((prev) => ({ ...prev, [jsonPath]: true }));
+  }, [jsonPath]);
+
+  const hoveredOff = useCallback(() => {
+    setHovered((prev) => ({ ...prev, [jsonPath]: false }));
+  }, [jsonPath]);
+
   if (!node) return null;
 
   return (
     <primitive
       object={node}
+      raycast={meshBounds}
       onClick={handleClick}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onPointerOver={hoveredOn}
+      onPointerOut={hoveredOff}
     />
   );
+};
+
+type HoveredState = {
+  [key: string]: boolean;
 };
 
 export const RegisterOnClickListeners = ({
@@ -75,9 +96,16 @@ export const RegisterOnClickListeners = ({
   onClickListeners: OnClickListeners;
   gltf?: GLTF & ObjectMap;
 }) => {
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState<HoveredState>({});
 
-  useCursor(hovered, 'pointer', 'auto');
+  const [anyHovered, setAnyHovered] = useState(false);
+
+  useEffect(() => {
+    const anyTrue = Object.values(hovered).some((x) => !!x);
+    setAnyHovered(anyTrue);
+  }, [hovered]);
+
+  useCursor(anyHovered, 'pointer', 'auto');
 
   if (!gltf) return null;
 

@@ -11,7 +11,7 @@ export default defineConfig({
         BullBear: {
           [scrollAlphaChainId]: '0xa6a8c083d22461c9cb60d7efd364d82062d48434',
           [baseChainId]: '0xAa9ADB5bcBA67e98eef5Bfc71020a3CA43aD083e',
-          [chains.foundry.id]: '0x5fbdb2315678afecb367f032d93f642f64180aa3'
+          [chains.foundry.id]: '0xb0d4afd8879ed9f52b28595d31b441d079b2ca07'
         }
       }
       // project: './contracts'

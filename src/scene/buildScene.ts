@@ -176,8 +176,10 @@ function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
       break;
     }
     case 'rotation': {
+      console.log('setting rotation', value);
       const v = value as Vec4;
       objectRef.quaternion.set(v.x, v.y, v.z, v.w);
+      objectRef.matrixWorldNeedsUpdate = true;
       break;
     }
   }
@@ -200,6 +202,7 @@ function applyMaterialModifier(
     }
     case 'opacity': {
       const basic = materialRef as MeshBasicMaterial;
+      materialRef.transparent = true;
 
       basic.opacity = value as number;
 

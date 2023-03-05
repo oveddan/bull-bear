@@ -5,11 +5,17 @@ import {
   NodeDefinition,
   SocketsMap
 } from '@oveddan-behave-graph/core';
-import { prepareWriteContract, readContract, writeContract } from '@wagmi/core';
-import { Abi, AbiFunction, AbiParameter } from 'abitype';
+import {
+  prepareWriteContract,
+  writeContract,
+  watchContractEvent,
+  watchReadContract
+} from '@wagmi/core';
+import { Abi, AbiEvent, AbiFunction, AbiParameter } from 'abitype';
 import { BigNumber } from 'ethers';
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
+import { OnThenOff } from './OnThenOff';
 
 type AbiFunctionThatIsFunction = AbiFunction & { type: 'function' };
 
@@ -69,6 +75,164 @@ const generateInputArgs = (
     ? inputs.map((x, i) => read(getInputName(x, i)))
     : undefined;
 
+const makeReadFunctions = ({
+  readFunctions,
+  abi,
+  name,
+  chainId,
+  contractAddress
+}: {
+  readFunctions: AbiFunctionThatIsFunction[];
+  abi: Abi;
+  name: string;
+  chainId: number;
+  contractAddress: `0x${string}`;
+}) => {
+  const defaultPollInterval = 2;
+
+  return readFunctions.map((x) => {
+    const initialState: UnwatchState = {};
+
+    const typeName = `smartContract/${name}/${x.name}`;
+
+    const inputs = toSockets(x.inputs);
+
+    return makeEventNodeDefinition({
+      typeName: typeName,
+      category: NodeCategory.Event,
+      label: `Read ${name} contract ${x.name}`,
+      in: {
+        ...inputs
+        // contractAddress: 'string'
+      },
+      configuration: {
+        pollInterval: {
+          valueType: 'integer',
+          defaultValue: defaultPollInterval
+        }
+      },
+      out: {
+        ...toSockets(x.outputs),
+        flow: 'flow'
+      },
+      initialState,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      dispose: ({ state }) => {
+        if (state.unwatch) {
+          state.unwatch();
+        }
+        return {};
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      init: ({ read, configuration, write, commit }) => {
+        const unwatch = watchReadContract(
+          {
+            chainId,
+            abi,
+            address: contractAddress,
+            functionName: x.name,
+            args: generateInputArgs(x.inputs, read),
+            listenToBlock: true
+          },
+          (result) => {
+            let toBigInt: bigint;
+            try {
+              if (typeof result === 'number') {
+                toBigInt = BigInt(result);
+              } else {
+                toBigInt = (result as BigNumber).toBigInt();
+              }
+            } catch (e) {
+              console.error(e);
+              return;
+            }
+
+            console.log('got result', { toBigInt });
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            write('0', toBigInt);
+            commit('flow');
+          }
+        );
+
+        return { unwatch };
+      }
+    });
+  });
+};
+
+type UnwatchState = {
+  unwatch?: () => void;
+};
+
+const makeWriteFunctions = ({
+  writeFunctions,
+  abi,
+  name,
+  chainId,
+  contractAddress
+}: {
+  writeFunctions: AbiFunctionThatIsFunction[];
+  abi: Abi;
+  name: string;
+  chainId: number;
+  contractAddress: `0x${string}`;
+}) => {
+  return writeFunctions.map((x) => {
+    const typeName = `smartContract/${name}/${x.name}`;
+    return makeFlowNodeDefinition({
+      typeName,
+      label: `Write to ${name} contract ${x.name}`,
+
+      category: NodeCategory.Flow,
+      in: toExecuteTransactionInputs(x.inputs, x.stateMutability === 'payable'),
+      out: {},
+      initialState: undefined,
+      triggered: ({ read, commit, graph }) => {
+        if (!contractAddress) {
+          console.error('no contract address for node');
+          return;
+        }
+        if (!chainId) {
+          console.error('missing chain id');
+          return;
+        }
+
+        const args = generateInputArgs(x.inputs, read);
+
+        (async () => {
+          // console.log('writing to', { contractAddress, name: x.name, args });
+          const config = await prepareWriteContract({
+            chainId,
+            abi,
+            address: contractAddress,
+            functionName: x.name,
+            args
+          });
+
+          try {
+            // commit('started');
+            const { hash, wait } = await writeContract({
+              ...config,
+              abi
+            });
+            // console.log({ hash, wait });
+            // console.log('waiting');
+            await wait();
+            console.log('succeeded and writing');
+            // commit('succeeded');
+            // console.log('done');
+          } catch (error) {
+            console.error(error);
+            // commit('failed');
+          }
+        })();
+      }
+    });
+  });
+};
+
 function makeSmartContractFunctionNodeDefinitions({
   abi,
   name,
@@ -94,155 +258,65 @@ function makeSmartContractFunctionNodeDefinitions({
       stateMutability === 'nonpayable' || stateMutability === 'payable'
   );
 
-  const defaultPollInterval = 2;
+  const events = abi.filter((x) => x.type === 'event') as AbiEvent[];
 
-  const readFunctionDefinitions = readFunctions.map((x) => {
-    const typeName = `smartContract/${name}/${x.name}`;
-
-    let pollTimeout = 0;
-
-    const inputs = toSockets(x.inputs);
-
-    return makeEventNodeDefinition({
-      typeName: typeName,
-      category: NodeCategory.Event,
-      label: `Read ${name} contract ${x.name}`,
-      in: {
-        ...inputs
-        // contractAddress: 'string'
-      },
-      configuration: {
-        pollInterval: {
-          valueType: 'integer',
-          defaultValue: defaultPollInterval
-        }
-      },
-      out: {
-        ...toSockets(x.outputs),
-        flow: 'flow'
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      dispose: () => {
-        window.clearTimeout(pollTimeout);
-      },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      init: ({ read, configuration, write, commit }) => {
-        const pollInterval = configuration.pollInterval || defaultPollInterval;
-
-        const poll = async () => {
-          if (!contractAddress) {
-            console.error('no contract address for node');
-            return;
-          }
-          if (!chainId) {
-            console.error('no chain id for node');
-            return;
-          }
-
-          const inputs = generateInputArgs(
-            x.inputs,
-            // @ts-ignore
-            read
-          );
-
-          const result = await readContract({
-            chainId,
-            abi,
-            address: contractAddress,
-            functionName: x.name,
-            args: inputs
-          });
-
-          // for now assume result is 1 value
-          let toBigInt: bigint;
-          try {
-            if (typeof result === 'number') {
-              toBigInt = BigInt(result);
-            } else {
-              toBigInt = (result as BigNumber).toBigInt();
-            }
-          } catch (e) {
-            console.error(e);
-            return;
-          }
-
-          console.log('got result', { toBigInt });
-
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          write('0', toBigInt);
-          commit('flow');
-
-          // console.log({ result, toBigInt });
-          pollTimeout = window.setTimeout(() => {
-            // sort alphabetically by input key
-            poll();
-          }, pollInterval * 1000);
-        };
-
-        poll();
-      },
-      initialState: undefined
-    });
+  const readFunctionDefinitions = makeReadFunctions({
+    readFunctions,
+    abi,
+    name,
+    chainId,
+    contractAddress
   });
 
-  const writeFunctionDefinitions = writeFunctions.map((x) => {
-    const typeName = `smartContract/${name}/${x.name}`;
-    return makeFlowNodeDefinition({
-      typeName,
-      label: `Write to ${name} contract ${x.name}`,
+  const writeFunctionDefinitions = makeWriteFunctions({
+    writeFunctions,
+    abi,
+    name,
+    chainId,
+    contractAddress
+  });
 
-      category: NodeCategory.Flow,
-      in: toExecuteTransactionInputs(x.inputs, x.stateMutability === 'payable'),
+  const eventFunctionDefinitions = events.map((x) => {
+    const initialState: UnwatchState = {};
+
+    return makeEventNodeDefinition({
+      typeName: `smartContract/${name}/on${x.name}`,
+      in: {},
       out: {
-        started: 'flow',
-        succeeded: 'flow',
-        failed: 'flow'
+        flow: 'flow',
+        ...toSockets(x.inputs)
       },
-      initialState: undefined,
-      triggered: ({ read, commit, graph }) => {
-        if (!contractAddress) {
-          console.error('no contract address for node');
-          return;
-        }
-        if (!chainId) {
-          console.error('missing chain id');
-          return;
-        }
-
-        const args = generateInputArgs(x.inputs, read);
-
-        (async () => {
-          console.log('writing to', { contractAddress, name: x.name, args });
-          const config = await prepareWriteContract({
-            chainId,
-            abi,
+      label: `On ${name} contract event ${x.name}`,
+      initialState,
+      init: ({ read, write, commit }) => {
+        const unwatch = watchContractEvent(
+          {
             address: contractAddress,
-            functionName: x.name,
-            args
-          });
-
-          try {
-            commit('started');
-            const { hash, wait } = await writeContract({
-              ...config,
-              abi
-            });
-            // console.log({ hash, wait });
-            // console.log('waiting');
-            await wait();
-            commit('succeeded');
-            console.log('done');
-          } catch (error) {
-            console.error(error);
-            commit('failed');
+            abi,
+            eventName: x.name
+          },
+          (args) => {
+            // todo: parse args
+            console.log(args);
+            commit('flow');
           }
-        })();
+        );
+
+        return { unwatch };
+      },
+      dispose: ({ state }) => {
+        if (state.unwatch) state.unwatch();
+        return {};
       }
     });
   });
 
-  return [...readFunctionDefinitions, ...writeFunctionDefinitions];
+  return [
+    ...readFunctionDefinitions,
+    ...writeFunctionDefinitions,
+    ...eventFunctionDefinitions,
+    OnThenOff
+  ];
 }
 
 export function makeSmartContractNodeDefinitions<

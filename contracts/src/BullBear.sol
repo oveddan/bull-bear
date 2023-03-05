@@ -31,6 +31,8 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   BullBearToken public immutable bullBearToken;
   // BullBearFood public immutable bullBearFood;
 
+  event Petted(uint256 tokenId);
+
   mapping(uint256 => LastHappiness) private lastHappiness;
   mapping(uint256 => uint256) private lastPetTime;
 
@@ -73,6 +75,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
     }
 
     lastPetTime[tokenId] = block.timestamp;
+    emit Petted(tokenId);
     _increaseHappiness(tokenId, PETTING_BONUS);
   }
 
