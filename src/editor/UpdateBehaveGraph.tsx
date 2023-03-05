@@ -111,9 +111,9 @@ const UpdateBehaveGraphInner = ({
       <button
         onClick={handleUpdateToken}
         disabled={updating}
-        className="mx-2 bg-slate-400 px-2"
+        className="mx-2 mb-1 italic"
       >
-        Save
+        save
       </button>
     </>
   );

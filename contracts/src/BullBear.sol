@@ -83,9 +83,6 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   }
 
   function pet(uint256 tokenId) public {
-    // if (isRekt(tokenId)) {
-    //   revert Rekt();
-    // }
     // check if can pet according to the time
     // if this is a new pet, then we can pet
     if (!canPet(tokenId)) {
@@ -95,6 +92,18 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
     lastPetTime[tokenId] = block.timestamp;
     emit Petted(tokenId);
     _increaseHappiness(tokenId, PETTING_BONUS);
+  }
+
+  function getHappiness(uint256 tokenId) public view returns (uint8) {
+    LastHappiness storage _lastHappiness = lastHappiness[tokenId];
+    uint256 elapsed = block.timestamp - _lastHappiness.time;
+    uint256 decay = (HAPPINESS_DECAY_RATE_PER_MINUTE * elapsed) / 60;
+
+    if (decay >= _lastHappiness.happiness) {
+      return 0;
+    }
+
+    return _lastHappiness.happiness - uint8(decay);
   }
 
   function isRekt(uint256 tokenId) public view returns (bool) {
@@ -120,18 +129,6 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
     bytes4 interfaceId
   ) public view override(ERC721, ERC721URIStorage) returns (bool) {
     return super.supportsInterface(interfaceId);
-  }
-
-  function getHappiness(uint256 tokenId) public view returns (uint8) {
-    LastHappiness storage _lastHappiness = lastHappiness[tokenId];
-    uint256 elapsed = block.timestamp - _lastHappiness.time;
-    uint256 decay = (HAPPINESS_DECAY_RATE_PER_MINUTE * elapsed) / 60;
-
-    if (decay >= _lastHappiness.happiness) {
-      return 0;
-    }
-
-    return _lastHappiness.happiness - uint8(decay);
   }
 
   function pettingBonus() external pure returns (uint8) {
