@@ -6,12 +6,16 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { publicProvider } from 'wagmi/providers/public';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { scrollAlphaChain, scrollAlphaChainId } from './customChains';
+import {
+  baseChain,
+  scrollAlphaChain,
+  scrollAlphaChainId
+} from './customChains';
 
 const getAllowedChains = () =>
   import.meta.env.MODE === 'development'
-    ? [foundry, goerli, scrollAlphaChain]
-    : [goerli, scrollAlphaChain];
+    ? [foundry, scrollAlphaChain, baseChain]
+    : [scrollAlphaChain, baseChain];
 
 const getUrl = (chainId: number) => {
   if (chainId == foundry.id) return `http://127.0.0.1:8545`;

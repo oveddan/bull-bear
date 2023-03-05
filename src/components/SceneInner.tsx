@@ -2,9 +2,9 @@ import {
   Center,
   Environment,
   Lightformer,
-  OrbitControls,
   SpotLight,
-  useContextBridge
+  useContextBridge,
+  useGLTF
 } from '@react-three/drei';
 import { Canvas, ObjectMap } from '@react-three/fiber';
 import { useState } from 'react';
@@ -14,8 +14,8 @@ import { AnimationsState } from '../scene/useScene';
 import { Context as WagmiContext } from 'wagmi';
 import { RegisterOnClickListeners } from '../scene/RegisterOnClickListeners';
 import ToggleAnimations from '../scene/ToggleAnimations';
-import { Floor } from './Elements/Floor';
 import { OnClickListeners } from '../scene/buildScene';
+import { Background } from './Elements/Background';
 
 export const SceneInner = ({
   onClickListeners,
@@ -28,11 +28,12 @@ export const SceneInner = ({
 }) => {
   // const [mainRef, setMainRef] = useState<Object3D | null>(null);
   const [mainRef, setMainRef] = useState<Object3D | null>(null);
+  const cloud = useGLTF('/cloud-b.glb');
   const ContextBridge = useContextBridge(WagmiContext);
   return (
     <Canvas className="bg-black">
       <ContextBridge>
-        <OrbitControls makeDefault target={mainRef?.position} />
+        {/* <OrbitControls makeDefault target={mainRef?.position} /> */}
         <Environment background={true}>
           <Lightformer
             form="rect" // circle | ring | rect (optional, default = rect)
@@ -42,30 +43,32 @@ export const SceneInner = ({
             target={[0, 0, 0]} // Target position (optional = undefined)
           />
         </Environment>
-        <SpotLight
-          distance={10}
-          angle={0.3}
-          attenuation={5}
-          anglePower={2} // Diffuse-cone anglePower (default: 5)
-          position-y={4}
-          position-z={3}
-        />
-        <Center>
-          {/* <Backdrop
+        <directionalLight />
+        {/* <Center> */}
+        {/* <Backdrop
             floor={0.25} // Stretches the floor segment, 0.25 by default
             segments={20} // Mesh-resolution, 20 by default
             receiveShadow
           >
             <meshStandardMaterial color="#353540" />
           </Backdrop> */}
+        <Background />
+        <Center position-z={0} position-y={0.5} position-x={0.7}>
+          <primitive
+            object={cloud.scene}
+            position-y={3}
+            position-x={2.5}
+            rotation-y={Math.PI / 2}
+          />
           <primitive object={gltf.scene} ref={setMainRef}>
             <RegisterOnClickListeners
               gltf={gltf}
               onClickListeners={onClickListeners}
             />
           </primitive>
-          <Floor />
+          {/* <Floor /> */}
         </Center>
+        {/* </Center> */}
         <ToggleAnimations gltf={gltf} animationsState={animations} />
         {/* </Stage> */}
       </ContextBridge>

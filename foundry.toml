@@ -7,9 +7,9 @@ solc = '0.8.9'
 optimizer_runs = 10_000
 
 [rpc_endpoints]
-scroll='https://alpha-rpc.scroll.io/l2'
+534353='https://alpha-rpc.scroll.io/l2'
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
 
 [etherscan]
-534353= { key = "${ETHERSCAN_API_KEY}" }
+534353= { key = "1aca0c00-77e6-428c-9e09-8a2d688639f7" }
 84531= { key = "${ETHERSCAN_API_KEY}" }

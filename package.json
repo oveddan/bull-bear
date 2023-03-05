@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "anvil": "source .env && anvil --fork-url $ANVIL_FORK_URL --chain-id $ANVIL_CHAIN_ID",
-    "deploy:scroll": "source .env && forge script script/BullBear.s.sol:DeployScroll --rpc-url https://alpha-rpc.scroll.io/l2 --legacy --broadcast -vv",
+    "deploy:scroll": "source .env && forge script script/BullBear.s.sol:DeployScroll --rpc-url https://alpha-rpc.scroll.io/l2 --legacy --broadcast -vv --verify",
     "deploy:goerli": "source .env && forge script script/BullBear.s.sol:Deploy --rpc-url https://endpoints.omniatech.io/v1/eth/goerli/public --broadcast -vvvv",
     "deploy:base": "source .env && forge script script/BullBear.s.sol:DeployBase --rpc-url https://goerli.base.org --broadcast -vvvv",
     "deploy:anvil": "source .env.local && forge script script/BullBear.s.sol:DeployAnvil --fork-url http://localhost:8545 --broadcast",
@@ -41,6 +41,8 @@
     "wagmi": "~0.11.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "^1.0.0",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
@@ -57,6 +59,7 @@
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "eslint-plugin-unicorn": "^44.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "hardhat": "^2.13.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
     "prettier-plugin-solidity": "^1.1.3",
