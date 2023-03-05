@@ -1,7 +1,7 @@
 import { useTexture } from '@react-three/drei';
 import { BigNumber } from 'ethers';
-import { useEffect, useRef, useState } from 'react';
-import { DoubleSide, Object3D } from 'three';
+import { useEffect, useState } from 'react';
+import { DoubleSide } from 'three';
 import { useBullBearGetHappiness } from '../generated';
 
 export const UI = ({ tokenId }: { tokenId: BigNumber }) => {
