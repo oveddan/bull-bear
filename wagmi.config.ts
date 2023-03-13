@@ -9,9 +9,9 @@ export default defineConfig({
     foundry({
       deployments: {
         BullBear: {
-          [scrollAlphaChainId]: '0x494344159e4fa881cf60d350a24c10c485639173',
-          [baseChainId]: '0xf70abdb571bac66dd095ec1140ee99ca57dd1465',
-          [chains.foundry.id]: '0x2a810409872afc346f9b5b26571fd6ec42ea4849'
+          [scrollAlphaChainId]: '0x889a9c931fd6ae48f961ac3b0b50d8de77ea92a4',
+          [baseChainId]: '0xc66611e6c3d042c7c0abed228620a875dcf384f4',
+          [chains.foundry.id]: '0x4a679253410272dd5232b3ff7cf5dbb88f295319'
         }
       }
       // project: './contracts'

@@ -24,8 +24,7 @@ export const SceneInner = ({
   animations: AnimationsState;
   tokenId: BigNumber;
 }) => {
-  // const [mainRef, setMainRef] = useState<Object3D | null>(null);
-  const [mainRef, setMainRef] = useState<Object3D | null>(null);
+  // enable wagmi context to be used in the 3d scene.
   const ContextBridge = useContextBridge(WagmiContext);
   return (
     <Canvas className="bg-black">
@@ -41,21 +40,9 @@ export const SceneInner = ({
             target={[0, 0, 0]} // Target position (optional = undefined)
           />
         </Environment>
-        {/* <Center> */}
-        {/* <Backdrop
-            floor={0.25} // Stretches the floor segment, 0.25 by default
-            segments={20} // Mesh-resolution, 20 by default
-            receiveShadow
-          >
-            <meshStandardMaterial color="#353540" />
-          </Backdrop> */}
         <Background />
-        {/* <Center position-z={1} position-y={0} position-x={0.7}> */}
         <group position-y={-1.5}>
-          {/* <group position-y={3} position-x={2.5} rotation-y={Math.PI / 2}>
-            <HappinessIndicator happiness={0.7} />
-          </group> */}
-          <primitive object={gltf.scene} ref={setMainRef}></primitive>
+          <primitive object={gltf.scene}></primitive>
 
           <UI tokenId={tokenId} />
         </group>
@@ -63,11 +50,7 @@ export const SceneInner = ({
           gltf={gltf}
           onClickListeners={onClickListeners}
         />
-        {/* <Floor /> */}
-        {/* </Center> */}
-        {/* </Center> */}
         <ToggleAnimations gltf={gltf} animationsState={animations} />
-        {/* </Stage> */}
       </ContextBridge>
     </Canvas>
   );

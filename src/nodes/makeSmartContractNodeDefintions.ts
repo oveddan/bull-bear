@@ -1,10 +1,12 @@
 import {
+  INodeDefinition,
   makeEventNodeDefinition,
   makeFlowNodeDefinition,
   NodeCategory,
   NodeDefinition,
   SocketsMap
 } from '@oveddan-behave-graph/core';
+import { EaseSceneProperty } from '@oveddan-behave-graph/scene';
 import {
   prepareWriteContract,
   writeContract,
@@ -243,7 +245,7 @@ function makeSmartContractFunctionNodeDefinitions({
   name: string;
   chainId: number;
   contractAddress: `0x${string}`;
-}) {
+}): INodeDefinition[] {
   const functions = abi.filter(
     (x) => x.type === 'function'
   ) as AbiFunctionThatIsFunction[];
@@ -311,12 +313,14 @@ function makeSmartContractFunctionNodeDefinitions({
     });
   });
 
-  return [
+  const result: INodeDefinition[] = [
     ...readFunctionDefinitions,
     ...writeFunctionDefinitions,
     ...eventFunctionDefinitions,
     OnThenOff
   ];
+
+  return result;
 }
 
 export function makeSmartContractNodeDefinitions<
