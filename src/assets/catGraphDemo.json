@@ -1,6 +1,14 @@
 {
   "nodes": [
     {
+      "id": "b8998989-93a8-4a56-96e9-24c97a7f2fd9",
+      "type": "math/integer",
+      "metadata": {
+        "positionX": "-24.89276016408609",
+        "positionY": "325.249722558671"
+      }
+    },
+    {
       "id": "717b7c6c-e0a2-4d5d-b5f7-d45574083d6c",
       "type": "scene/set/float",
       "metadata": {
@@ -217,8 +225,8 @@
       "id": "ad4f0901-6aa5-4bb5-ab89-eff01674bbd0",
       "type": "math/greaterThanOrEqual/integer",
       "metadata": {
-        "positionX": "457.0766189181878",
-        "positionY": "-246.57408218432806"
+        "positionX": "480.8619466690839",
+        "positionY": "-240.62775024660402"
       },
       "parameters": {
         "b": {
@@ -233,51 +241,32 @@
       }
     },
     {
-      "id": "9abcc2f9-756e-462e-955c-863c577fe5b4",
-      "type": "flow/branch",
+      "id": "53bad168-b916-493d-9891-0ee3b4d6fc89",
+      "type": "smartContract/bullBear/pet",
       "metadata": {
-        "positionX": "402.04322399720894",
-        "positionY": "247.16177532129143"
+        "positionX": "871.1934081303056",
+        "positionY": "329.79618562562297"
       },
       "parameters": {
-        "condition": {
+        "tokenId": {
           "link": {
-            "nodeId": "5039c688-19c4-4433-9594-268c2761de35",
-            "socket": "0"
+            "nodeId": "b8998989-93a8-4a56-96e9-24c97a7f2fd9",
+            "socket": "result"
           }
         }
-      },
-      "flows": {
-        "false": {
-          "nodeId": "dcd4233c-e5ce-4776-a488-3fc1602b915f",
-          "socket": "close"
-        },
-        "true": {
-          "nodeId": "dcd4233c-e5ce-4776-a488-3fc1602b915f",
-          "socket": "open"
-        }
       }
     },
     {
-      "id": "5039c688-19c4-4433-9594-268c2761de35",
-      "type": "smartContract/bullBear/canPet",
+      "id": "ad61e3f7-2f37-4d46-915a-010cc6e3b496",
+      "type": "scene/nodeClick",
       "metadata": {
-        "positionX": "95.44620685367849",
-        "positionY": "245.65808102576645"
+        "positionX": "436.2214980588012",
+        "positionY": "432.65898399719543"
       },
-      "flows": {
-        "flow": {
-          "nodeId": "9abcc2f9-756e-462e-955c-863c577fe5b4",
-          "socket": "flow"
+      "parameters": {
+        "jsonPath": {
+          "value": "nodes/26"
         }
-      }
-    },
-    {
-      "id": "dcd4233c-e5ce-4776-a488-3fc1602b915f",
-      "type": "flow/gate",
-      "metadata": {
-        "positionX": "643.77148995053",
-        "positionY": "212.04550392436758"
       },
       "flows": {
         "flow": {
@@ -287,42 +276,18 @@
       }
     },
     {
-      "id": "53bad168-b916-493d-9891-0ee3b4d6fc89",
-      "type": "smartContract/bullBear/pet",
-      "metadata": {
-        "positionX": "884.0500300432576",
-        "positionY": "401.9910625214307"
-      }
-    },
-    {
-      "id": "ad61e3f7-2f37-4d46-915a-010cc6e3b496",
-      "type": "scene/nodeClick",
-      "metadata": {
-        "positionX": "152.22149805880122",
-        "positionY": "500.65898399719543"
-      },
-      "parameters": {
-        "jsonPath": {
-          "value": "nodes/26"
-        }
-      },
-      "flows": {
-        "flow": {
-          "nodeId": "dcd4233c-e5ce-4776-a488-3fc1602b915f",
-          "socket": "flow"
-        }
-      }
-    },
-    {
       "id": "071f3eeb-f980-4640-8f75-135839ce6386",
       "type": "smartContract/bullBear/getHappiness",
       "metadata": {
-        "positionX": "52.725055246696286",
-        "positionY": "63.89299192002345"
+        "positionX": "190.97727279877995",
+        "positionY": "78.75882176433352"
       },
       "parameters": {
         "tokenId": {
-          "value": "0"
+          "link": {
+            "nodeId": "b8998989-93a8-4a56-96e9-24c97a7f2fd9",
+            "socket": "result"
+          }
         }
       },
       "flows": {
