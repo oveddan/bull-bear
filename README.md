@@ -1,12 +1,12 @@
-# Chain Behave Graph
+# My-Mul Fully Interoperable On-Chain NFT Character Game
 
-This repository enables interactive 3d game asset nfts to be created in the interoperable [behave-graph](https://github.com/bhouston/behave-graph) format. Additionally, it provides an example implementation of a smart contract and way to build and integrate these behave graphs against the smart contract.
+This repository contains both the My-Mul game, and a pltaform that enables interactive 3d game asset nfts to be created in the interoperable [behave-graph](https://github.com/bhouston/behave-graph) format. Additionally, it provides an example implementation of a smart contract and way to build and integrate these behave graphs against the smart contract.
 
 It was build for Eth Denver 2023
 
-**Live Demo, connecrted to the Scroll and Base rollups: [https://my-mul.on.fleek.co/editor](https://my-mul.on.fleek.co/editor)**
+**Live Demo, connected to the Scroll zkevm and Base (Op Stack) rollups: [https://my-mul.on.fleek.co/editor](https://my-mul.on.fleek.co/editor)**
 
-In essence, it is an extension of the [behave-graph](https://github.com/bhouston/behave-graph) - allowing behave graph nodes to be generated off of a smart contract's abi, and allow a 3d model to write to and read from any evm compatible blockchain in an interoperable format that can be imported into open game platofrms.
+The platform offers an extension to [behave-graph](https://github.com/bhouston/behave-graph) - allowing behave graph nodes to be generated off of a smart contract's abi, and allow a 3d model to write to and read from any evm compatible blockchain in an interoperable format that can be imported into open game platofrms.
 
 ![screenshot of My Mul](readmeAssets/screenshot.png)
 
