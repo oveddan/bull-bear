@@ -27,7 +27,7 @@ contract BullBear is ERC721, ERC721URIStorage, Ownable {
   uint8 constant MAX_HAPPINESS = 100;
   uint8 constant INITIAL_HAPPINESS = MAX_HAPPINESS / 2;
   uint8 constant INITIAL_FOOD = 3;
-  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 100;
+  uint8 constant HAPPINESS_DECAY_RATE_PER_MINUTE = 50;
   uint8 constant PETTING_BONUS = 50;
   uint8 constant MIN_PETTING_INTERVAL_SECONDS = 5;
 
