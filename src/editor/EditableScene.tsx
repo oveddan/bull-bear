@@ -204,7 +204,7 @@ export const EdibleSceneWithFilesFromToken = () => {
 
   const gameContractNodeDefinitions = useGameContractNodeDefinitions();
 
-  if (!result.graphJson) return null;
+  if (!result?.graphJson || !result.modelUrl) return null;
   return (
     <EditableScene
       modelUrl={result.modelUrl}
