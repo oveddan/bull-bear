@@ -89,7 +89,7 @@ export const NonEditableScene = ({
 export const NonEditableSceneWithFilesFromToken = () => {
   const result = useModelAndGraphFromToken();
 
-  if (!result.graphJson) return null;
+  if (!result || !result.graphJson || !result.modelUrl) return null;
 
   return (
     <NonEditableScene modelUrl={result.modelUrl} graphJson={result.graphJson} />

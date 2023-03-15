@@ -3,27 +3,34 @@ import { useFetchGraphJson } from './useFetchJson';
 import { useMemo } from 'react';
 import { ThirdwebStorage } from '@thirdweb-dev/storage';
 
-const useGatewayUrl = <T extends string | undefined>(url: T): T => {
-  const storage = useMemo(() => new ThirdwebStorage(), []);
-
-  return url ? (storage.resolveScheme(url) as T) : url;
-};
-
 export const useModelAndGraphFromToken = () => {
   const { data } = useBullBearModelAndGraphUrls({
     watch: true
   });
 
-  const fullGraphJsonUrl = useGatewayUrl(
-    data ? `${data.baseUrl}${data.behaveGraphUrl}` : undefined
-  );
+  const storage = useMemo(() => new ThirdwebStorage(), []);
 
-  const graphJson = useFetchGraphJson({ url: fullGraphJsonUrl });
+  const urls = useMemo(() => {
+    if (!data) return undefined;
+    const fullGraphJsonUrl = storage.resolveScheme(
+      `${data.baseUrl}${data.behaveGraphUrl}`
+    );
+    const fullModelUrl = storage.resolveScheme(
+      `${data.baseUrl}${data.modelUrl}`
+    );
 
-  const fullModelUrl = useGatewayUrl(`${data!.baseUrl}${data!.modelUrl}`);
+    return {
+      modelUrl: fullModelUrl,
+      graphJsonUrl: fullGraphJsonUrl
+    };
+  }, [storage, data]);
+
+  if (!data) return undefined;
+
+  const graphJson = useFetchGraphJson({ url: urls?.graphJsonUrl });
 
   return {
-    modelUrl: fullModelUrl,
+    modelUrl: urls?.modelUrl,
     graphJson
   };
 };
