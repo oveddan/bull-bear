@@ -37,26 +37,3 @@ export const dataUrlFromFile = async (file: File) => {
 };
 
 export const publicUrl = (path: string) => new URL(path, import.meta.url).href;
-
-export const emptyGraphJson = (): GraphJSON => ({});
-
-export type ModelFile =
-  | {
-      fileUrl: string;
-      fileType: 'url';
-      fileContents: undefined;
-    }
-  | {
-      fileUrl: undefined;
-      fileType: 'uploaded';
-      fileContents: string;
-    };
-
-export const fetchModelFile = async (url: string, fileName: string) => {
-  // eslint-disable-next-line unicorn/no-await-expression-member
-  const blob = await (await fetch(url)).blob();
-
-  const file = new File([blob], fileName);
-
-  return file;
-};

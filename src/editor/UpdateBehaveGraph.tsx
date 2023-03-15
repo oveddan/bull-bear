@@ -1,25 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useAccount, useChainId } from 'wagmi';
 import { bullBearABI, useBullBear, useBullBearOwner } from '../generated';
-import { CIDString, Web3Storage } from 'web3.storage';
 import { prepareWriteContract, writeContract } from '@wagmi/core';
 import { GraphJSON, NodeSpecJSON } from '@oveddan-behave-graph/core';
 import { Edge, Node } from 'reactflow';
 import { flowToBehave } from '@oveddan-behave-graph/flow';
-
-// @ts-ignore
-const web3StorageKey = import.meta.env.VITE_WEB3_STORAGE_KEY as
-  | string
-  | undefined;
-
-export const makeWeb3StorageClient = () => {
-  if (!web3StorageKey)
-    throw new Error(
-      'VITE_WEB3_STORAGE_KEY environment variable must be defined.'
-    );
-  // @ts-ignore
-  return new Web3Storage({ token: web3StorageKey });
-};
+import { ThirdwebStorage } from '@thirdweb-dev/storage';
 
 // source: https://stackoverflow.com/questions/12168909/blob-from-dataurl
 async function dataURItoBlob(dataURI: string) {
@@ -47,21 +33,23 @@ export const createJsonFileFromObject = (object: Object, fileName: string) => {
 
 const fileName = 'graph.json';
 
-const toIpfsPath = (cid: CIDString, file: File | undefined) => {
-  if (!file) return undefined;
-
-  return `${cid}/${file.name}`;
+// goes from ipfs://cid/path to ipfs/path
+const toIpfsPath = (url: string) => {
+  return url.replace('ipfs://', '');
 };
 
 const saveToWebIPFS = async (graph: GraphJSON) => {
   const behaviorGraphFile = createJsonFileFromObject(graph, fileName);
-  const client = makeWeb3StorageClient();
+  const storage = new ThirdwebStorage();
+  // const client = makeWeb3StorageClient();
 
-  const cid = await client.put([behaviorGraphFile]);
+  const uri = await storage.upload(behaviorGraphFile);
+  // const cid = storage.upload
+  // const cid = await client.put([behaviorGraphFile]);
 
-  const behaviorGraphPath = toIpfsPath(cid, behaviorGraphFile) as string;
+  const ipfsPath = toIpfsPath(uri);
 
-  return behaviorGraphPath;
+  return ipfsPath;
 };
 
 const UpdateBehaveGraphInner = ({

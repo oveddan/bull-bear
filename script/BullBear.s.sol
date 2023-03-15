@@ -18,11 +18,11 @@ abstract contract Deploy is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     string
-      memory initialBehaveGraphURI = 'bafybeide2qishhnxq3kys6yyosl3wwrhjm6gor32cfrg7ivtifdxwqxzxq/graph.json';
+      memory initialBehaveGraphURI = 'QmZxCiMToDuQw1KJXqPsaQGavzSDWZkJ1egFRxCmKfc3Mt/graph.json';
 
     BullBear bullBear = new BullBear(
-      'ipfs.io://ipfs/',
-      'bafybeialdke2npmramdqmdqlpm2pjhbzgyqlmmzgsvgizinhjmgst2ydvi/combined-v3.glb',
+      'ipfs://',
+      'QmRdG4Rppi9J8fQL6dFA6dc9HQ67zt2DrPTjS2Bo8vfWyH/combined-v3.glb',
       initialBehaveGraphURI
     );
     bullBearAddress = address(bullBear);
